@@ -61,10 +61,10 @@ The BSPWM configuration is organized into cumulative profiles managed with [GNU 
 
 ### Profile Breakdown
 
-| Profile | Package | Contents | Intended Target |
+| Profile | Stow Package | Contents | Intended Target |
 | :--- | :--- | :--- | :--- |
 | **`core`** | `bspwm` | BSPWM configuration, SXHKD key daemon, Xauth, Setxkbmap, and Alacritty styling. | Minimal systems, servers with X11, headless setups. |
-| **`desktop`** | `bspwm-desktop` | Polybar, Rofi app launcher, Dunst notifications, Picom compositor, Feh, and audio/media hooks. | Full desktop workstations, laptops, and VMs. |
+| **`desktop`** | Reuses `bspwm` | Core + Polybar, Rofi app launcher, Dunst notifications, Picom compositor, Feh, Satty, FFmpeg recording, and brightness/audio hooks. | Full desktop workstations, laptops, and VMs. |
 
 ---
 

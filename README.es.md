@@ -61,10 +61,10 @@ La configuración de BSPWM está estructurada en perfiles acumulativos administr
 
 ### Desglose de Perfiles
 
-| Perfil | Paquete | Contenido | Objetivo |
+| Perfil | Paquete Stow | Contenido | Destino recomendado |
 | :--- | :--- | :--- | :--- |
 | **`core`** | `bspwm` | Configuración de BSPWM, daemon SXHKD, Xauth, Setxkbmap y estilos de Alacritty. | Sistemas mínimos, servidores con X11 o entornos headless. |
-| **`desktop`** | `bspwm-desktop` | Polybar, lanzador Rofi, notificaciones Dunst, compositor Picom, Feh y hooks multimedia. | Estaciones de trabajo completas, portátiles y VMs. |
+| **`desktop`** | Reutiliza `bspwm` | `core` más Polybar, lanzador Rofi, notificaciones Dunst, compositor Picom, Feh, Satty, grabación FFmpeg y hooks multimedia. | Estaciones de trabajo completas, portátiles y VMs. |
 
 ---
 
