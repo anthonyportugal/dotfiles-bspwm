@@ -91,7 +91,19 @@ restore_wallpaper() {
   fi
   if [[ -r "$HOME/.fehbg" ]]; then
     bash "$HOME/.fehbg"
+    return 0
   fi
+
+  local default_wall
+  for default_wall in \
+    "${XDG_DATA_HOME:-$HOME/.local/share}/wallpapers/w-001.webp" \
+    "${XDG_PICTURES_DIR:-$HOME/Pictures}/Wallpapers/w-001.webp" \
+    "${XDG_PICTURES_DIR:-$HOME/Pictures}/wallpapers/w-001.webp"; do
+    if [[ -r "$default_wall" ]]; then
+      apply_feh "$default_wall"
+      return 0
+    fi
+  done
 }
 
 clear_wallpaper() {
@@ -109,7 +121,7 @@ select_wallpaper() {
   mapfile -t files < <(list_wallpapers)
 
   if (( ${#files[@]} == 0 )); then
-    notify "Wallpaper" "No se encontraron imágenes en ~/Pictures/Wallpapers"
+    notify "Wallpaper" "No se encontraron imágenes en ~/.local/share/wallpapers ni ~/Pictures/Wallpapers"
     return 0
   fi
 

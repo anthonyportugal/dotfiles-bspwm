@@ -43,6 +43,14 @@ if [[ -n "$requested_right" ]]; then
 else
   detected_right_modules=(pulseaudio memory)
 
+  for backlight_path in /sys/class/backlight/*; do
+    if [[ -r "$backlight_path/brightness" && -r "$backlight_path/max_brightness" ]]; then
+      export BSPWM_BACKLIGHT="${backlight_path##*/}"
+      detected_right_modules+=(backlight)
+      break
+    fi
+  done
+
   has_wired=0
   has_wireless=0
   for interface_path in /sys/class/net/*; do
@@ -57,6 +65,10 @@ else
   (( has_wired == 0 )) || detected_right_modules+=(wired-network)
   (( has_wireless == 0 )) || detected_right_modules+=(wireless-network)
 
+  if command -v powerprofilesctl >/dev/null 2>&1; then
+    detected_right_modules+=(power-profile)
+  fi
+
   battery_name=''
   adapter_name=''
   for supply_path in /sys/class/power_supply/*; do
@@ -65,14 +77,14 @@ else
     if [[ "$supply_type" == Battery && -z "$battery_name" ]] &&
        [[ -r "$supply_path/capacity" && -r "$supply_path/status" ]]; then
       battery_name=${supply_path##*/}
-    elif [[ "$supply_type" =~ ^(Mains|USB|USB_C)$ ]] &&
+    elif [[ "$supply_type" =~ ^(Mains|USB|USB_C|AC|ADP[0-9]*)$ ]] &&
          [[ -r "$supply_path/online" && -z "$adapter_name" ]]; then
       adapter_name=${supply_path##*/}
     fi
   done
-  if [[ -n "$battery_name" && -n "$adapter_name" ]]; then
+  if [[ -n "$battery_name" ]]; then
     export BSPWM_BATTERY="$battery_name"
-    export BSPWM_ADAPTER="$adapter_name"
+    [[ -z "$adapter_name" ]] || export BSPWM_ADAPTER="$adapter_name"
     detected_right_modules+=(battery)
   fi
 
