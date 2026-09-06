@@ -2,7 +2,7 @@
 
 *Read this in other languages:* [Español](README.es.md)
 
-Autonomous, public, and minimal X11 desktop session based on **BSPWM** (Binary Space Partitioning Window Manager) styled with the Catppuccin Mocha theme. It functions completely standalone or composed with the primary modular dotfiles ecosystem.
+Autonomous, public, and minimal X11 desktop session based on [BSPWM](https://github.com/baskerville/bspwm) (Binary Space Partitioning Window Manager) styled with the Catppuccin Mocha theme. It functions completely standalone or composed with the primary modular dotfiles ecosystem.
 
 <p align="center">
   <img src="assets/screenshot.webp" alt="BSPWM Desktop Preview" width="100%">
