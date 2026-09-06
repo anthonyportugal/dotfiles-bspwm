@@ -1,8 +1,18 @@
 # BSPWM Dotfiles
 
+<p align="center">
+  <a href="https://kernel.org"><img src="https://img.shields.io/badge/OS-Linux-FCC624?style=flat-square&logo=linux&logoColor=black" alt="Linux"></a>
+  <a href="https://archlinux.org"><img src="https://img.shields.io/badge/Arch_Linux-1793D1?style=flat-square&logo=archlinux&logoColor=white" alt="Arch Linux"></a>
+  <a href="https://cachyos.org"><img src="https://img.shields.io/badge/CachyOS-Supported-00A86B?style=flat-square" alt="CachyOS"></a>
+  <a href="https://www.x.org"><img src="https://img.shields.io/badge/Display-X11-red?style=flat-square&logo=xorg&logoColor=white" alt="X11"></a>
+  <a href="https://github.com/baskerville/bspwm"><img src="https://img.shields.io/badge/WM-BSPWM-black?style=flat-square" alt="BSPWM"></a>
+  <a href="https://github.com/catppuccin/catppuccin"><img src="https://img.shields.io/badge/Theme-Catppuccin_Mocha_Pink-f5c2e7?style=flat-square&logo=catppuccin&logoColor=1e1e2e" alt="Tema"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="Licencia"></a>
+</p>
+
 *Read this in other languages:* [English](README.md)
 
-Sesión de escritorio X11 autónoma, pública y minimalista basada en [BSPWM](https://github.com/baskerville/bspwm) (Binary Space Partitioning Window Manager) con el tema Catppuccin Mocha. Funciona de manera 100% independiente o compuesta con el ecosistema principal de dotfiles modulares.
+Sesión de escritorio X11 autónoma, modular y minimalista optimizada para **Arch Linux** y **CachyOS** basada en [BSPWM](https://github.com/baskerville/bspwm) (Binary Space Partitioning Window Manager) con la paleta Catppuccin Mocha y acentos en Pink. Funciona de manera 100% independiente o compuesta con el ecosistema principal de dotfiles modulares.
 
 <p align="center">
   <img src="assets/screenshot.webp" alt="Vista previa de BSPWM Desktop" width="100%">
@@ -10,6 +20,17 @@ Sesión de escritorio X11 autónoma, pública y minimalista basada en [BSPWM](ht
 
 > [!TIP]
 > Este repositorio proporciona un entorno de escritorio X11 autónomo y listo para producción, integrándose limpiamente con el ecosistema de dotfiles base.
+
+---
+
+## ✨ Características Principales
+
+- ⚡ **Ligero y Extremadamente Rápido:** Mínimo consumo de memoria en X11 con particionado de ventanas instantáneo en árbol binario.
+- 🎨 **Estética Catppuccin Mocha:** Diseño visual coherente en Alacritty, Polybar, Rofi, Dunst y Picom con acentos semánticos en Pink (`#f5c2e7`).
+- 📊 **Polybar Dinámica:** Detección en tiempo real de interfaces de red activas (Wi-Fi/Ethernet), nivel de batería y reproducción multimedia MPRIS.
+- 🎛️ **Atajos Ergonómicos:** Arquitectura de teclado intuitiva gestionada por `sxhkd` con menú interactivo de ayuda (`Super + ?`).
+- 🔋 **Energía y Luz Nocturna:** Control de temperatura de color con Redshift y selector interactivo de perfiles de energía (`power-profiles-daemon`).
+- 🔒 **GNU Stow y Cero Basura:** Perfiles acumulativos (`core`, `desktop`) con simulación segura (dry-run) y diagnósticos de salud del sistema (`doctor`).
 
 ---
 
@@ -38,26 +59,38 @@ La configuración de BSPWM está estructurada en perfiles acumulativos administr
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
+### Desglose de Perfiles
+
+| Perfil | Paquete | Contenido | Objetivo |
+| :--- | :--- | :--- | :--- |
+| **`core`** | `bspwm` | Configuración de BSPWM, daemon SXHKD, Xauth, Setxkbmap y estilos de Alacritty. | Sistemas mínimos, servidores con X11 o entornos headless. |
+| **`desktop`** | `bspwm-desktop` | Polybar, lanzador Rofi, notificaciones Dunst, compositor Picom, Feh y hooks multimedia. | Estaciones de trabajo completas, portátiles y VMs. |
+
 ---
 
-## 🛠️ Componentes Aprobados
+## 🛠️ Stack Tecnológico Aprobado
 
-| Capacidad | Selección | Descripción |
+| Capacidad | Componente | Propósito |
 | :--- | :--- | :--- |
-| **Gestor de Ventanas** | `bspwm` | Gestor de ventanas tipo tiling de particionado binario |
-| **Daemon de Atajos** | `sxhkd` | Daemon simple de atajos de teclado para X |
-| **Barra de Estado** | `polybar` | Barra moderna con detección dinámica de red y batería |
-| **Lanzador de Apps** | `rofi` | Menú de aplicaciones y apagado del sistema |
-| **Compositor** | `picom` | Sombras, esquinas redondeadas y opacidad |
-| **Notificaciones** | `dunst` | Servidor de notificaciones ligero |
-| **Fondo de Pantalla** | `feh` | Gestor de fondos con selector interactivo |
-| **Audio / Media** | PipeWire & Playerctl | Stack de audio moderno con soporte de control MPRIS |
+| **Gestor de Ventanas** | [`bspwm`](https://github.com/baskerville/bspwm) | Gestor de ventanas en mosaico basado en particionado binario |
+| **Daemon de Atajos** | `sxhkd` | Simple X hotkey daemon |
+| **Barra de Estado** | `polybar` | Barra de estado con detección dinámica de red y batería |
+| **Lanzador de Apps** | `rofi` | Lanzador de aplicaciones y menú de energía |
+| **Compositor** | `picom` | Sombras suaves, transparencia de ventanas y renderizado GLX |
+| **Terminal** | `alacritty` | Emulador de terminal acelerado por GPU con tema Catppuccin |
+| **Notificaciones** | `dunst` | Daemon ligero y personalizable de notificaciones |
+| **Fondo de Pantalla** | `feh` | Gestor de fondos de pantalla con selector interactivo |
+| **Luz Nocturna** | `redshift` | Ajuste de temperatura de color de pantalla |
+| **Audio / Multimedia** | PipeWire & Playerctl | Servidor de audio moderno con control de medios MPRIS |
+| **Capturas** | `satty` & `maim` | Captura de pantalla completa o por región con editor interactivo |
 
 ---
 
-## 🚀 Instalación y Uso Rápido
+## 🚀 Instalación y Guía Rápida
 
-### 1. Despliegue Standalone (Recomendado)
+La CLI incluida `./bin/bspwm` gestiona la instalación de paquetes y los enlaces simbólicos de GNU Stow con seguridad dry-run integrada.
+
+### 1. Instalación Standalone (Recomendada)
 
 ```bash
 mkdir -p "$HOME/.dotfiles/wm"
@@ -65,71 +98,86 @@ git clone https://github.com/anthonyportugal/dotfiles-bspwm.git "$HOME/.dotfiles
 cd "$HOME/.dotfiles/wm/bspwm"
 ```
 
-### 2. Desplegar el Entorno
+### 2. Despliegue del Entorno
 
-- **Experiencia de Escritorio Completa (Recomendado):**
+- **Experiencia de Escritorio Completa (Recomendada):**
   ```bash
   ./bin/bspwm bootstrap --profile desktop --apply
   ```
-- **Sesión Core Minimalista (Sin barra ni efectos visuales):**
+- **Sesión Core Minimalista (Solo Gestor de Ventanas):**
   ```bash
   ./bin/bspwm bootstrap --profile core --apply
   ```
 
-### Opciones Útiles del Asistente
-- **Simulación Dry-run:** Omite `--apply` para previsualizar acciones sin modificar el sistema:
+### Flags Útiles del Asistente
+
+- **Simulación Dry-run (Modo seguro):** Omite `--apply` para previsualizar los cambios sin modificar el sistema de archivos:
   ```bash
   ./bin/bspwm bootstrap --profile desktop
   ```
-- **Diagnóstico del sistema:** Verifica el estado y los enlaces del entorno:
+- **Diagnósticos:** Verifica dependencias, salud y estado de enlaces:
   ```bash
   ./bin/bspwm doctor --profile desktop
   ```
-- **Desvincular / Limpiar:** Retira los enlaces simbólicos de forma limpia:
+- **Desvincular / Limpiar:** Retira los enlaces simbólicos administrados de forma limpia:
   ```bash
   ./bin/bspwm unlink --profile desktop --apply
   ```
+- **Backend AUR:** Detección automática (`shelly`, `paru`, `yay`), o configurable mediante `--backend <nombre>`.
 
 ---
 
 ## 🔗 Integración con Dotfiles Base
 
-Aunque este repositorio funciona de forma **100% independiente**, se integra limpiamente con el ecosistema principal:
+Aunque este repositorio funciona de forma **100% independiente**, se integra limpiamente con el ecosistema de dotfiles:
+
 - 🌐 **Repositorio Base:** [anthonyportugal/dotfiles](https://github.com/anthonyportugal/dotfiles)
-- **Ecosistema Compartido:** Cuando se instala junto al repositorio base, la configuración de Alacritty, alias de Zsh, configuraciones de Neovim y preferencias GTK se comparten entre sesiones X11 y Wayland.
+- **Ecosistema Compartido:** Al instalarse junto con el repositorio base, las configuraciones de terminal Alacritty, Zsh, Neovim y preferencias GTK se comparten entre sesiones X11 y Wayland sin duplicación.
 
 ---
 
 ## ⌨️ Atajos de Teclado Principales
 
+### Aplicaciones y Lanzadores
+
 | Atajo | Acción |
 | :--- | :--- |
 | `Super + Return` | Abrir terminal Alacritty (Mosaico) |
 | `Super + Shift + Return` | Abrir terminal Alacritty flotante |
-| `Super + D` | Abrir menú de aplicaciones Rofi |
+| `Super + D` | Abrir lanzador de aplicaciones Rofi |
 | `Super + B` | Abrir navegador web predeterminado (Brave) |
-| `Super + E` | Abrir gestor de archivos gráfico (Thunar) |
-| `Super + L` | Bloquear pantalla de inmediato (slock / i3lock) |
-| `Super + X` | Abrir menú de apagado/sesión Rofi |
-| `Super + Shift + P` | Abrir selector interactivo de perfiles de energía (Rofi) |
-| `Super + Escape` | Reiniciar sesión de BSPWM y recargar SXHKD |
-| `Super + Shift + Escape` | Cerrar sesión de BSPWM |
-| `Super + T` | Alternar modo de ventana (*Tiled / Monocle*) |
-| `Super + N` | Alternar luz nocturna cálida (Redshift) |
-| `Super + W` | Seleccionar fondo de pantalla interactivo con Rofi (Feh) |
-| `Alt + Space` | Alternar distribución de teclado US / Latinoamérica |
-| `Super + ?` / `Super + Shift + ?` | Abrir hoja de atajos interactiva |
-| `Print` / `Super + S` | Captura de pantalla completa |
-| `Super + Shift + S` | Captura de región interactiva con anotación en Satty |
-| `Super + R` / `Super + Shift + R` | Grabación de pantalla completa / región interactiva (FFmpeg) |
-| `Super + Alt + R` | Abrir menú de opciones de audio para grabación (Rofi) |
+| `Super + E` | Abrir explorador de archivos gráfico (Thunar) |
+| `Super + ?` / `Super + Shift + ?` | Abrir hoja de trucos interactiva de atajos |
+
+### Gestión de Ventanas
+
+| Atajo | Acción |
+| :--- | :--- |
 | `Super + C` / `Super + Shift + C` | Cerrar / Forzar cierre de ventana enfocada |
+| `Super + T` | Alternar modo de disposición (*Mosaico / Monóculo*) |
+| `Super + Escape` | Reiniciar sesión BSPWM y recargar SXHKD |
+| `Super + Shift + Escape` | Salir de la sesión BSPWM |
+
+### Sistema y Utilidades
+
+| Atajo | Acción |
+| :--- | :--- |
+| `Super + L` | Bloquear pantalla de inmediato (slock / i3lock) |
+| `Super + X` | Abrir menú de apagado/energía (Rofi) |
+| `Super + Shift + P` | Abrir selector interactivo de perfiles de energía (Rofi) |
+| `Super + N` | Activar / desactivar filtro de luz nocturna (Redshift) |
+| `Super + W` | Seleccionar fondo de pantalla desde la galería vía Rofi (Feh) |
+| `Alt + Space` | Alternar distribución de teclado entre US y Latinoamérica |
+| `Print` / `Super + S` | Captura de pantalla completa |
+| `Super + Shift + S` | Captura interactiva por región con editor de anotaciones Satty |
+| `Super + R` / `Super + Shift + R` | Grabación de pantalla completa o por región (FFmpeg) |
+| `Super + Alt + R` | Menú interactivo de opciones de audio para grabación (Rofi) |
 
 ---
 
-## 🧪 Pruebas Automatizadas
+## 🧪 Pruebas y Verificación
 
-Ejecuta la suite de pruebas automáticas para validar sintaxis, enlaces y scripts:
+Ejecuta la suite de smoke tests local para verificar enlaces simbólicos, sintaxis de scripts y la sesión:
 
 ```bash
 ./tests/bootstrap-smoke.sh
@@ -140,5 +188,5 @@ Ejecuta la suite de pruebas automáticas para validar sintaxis, enlaces y script
 
 ## 📄 Licencia
 
-El código y las configuraciones originales se distribuyen bajo la [Licencia MIT](LICENSE).
-Las paletas de Catppuccin y avisos de terceros se detallan en `THIRD_PARTY_NOTICES.md`.
+El código original y la configuración se distribuyen bajo la [Licencia MIT](LICENSE).
+La paleta Catppuccin y avisos de terceros se detallan en `THIRD_PARTY_NOTICES.md`.
