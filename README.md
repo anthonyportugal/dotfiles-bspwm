@@ -8,8 +8,8 @@ Autonomous, public, and minimal X11 desktop session based on **BSPWM** (Binary S
   <img src="assets/screenshot.webp" alt="BSPWM Desktop Preview" width="100%">
 </p>
 
-> [!NOTE]
-> **Work in progress:** This repository provides an independent X11 desktop experience and integrates with the base dotfiles at [anthonyportugal/dotfiles](https://github.com/anthonyportugal/dotfiles) (branch `refactor/modular-dotfiles`).
+> [!TIP]
+> This repository provides a standalone, production-ready X11 desktop environment and seamlessly integrates with the base dotfiles ecosystem.
 
 ---
 
@@ -95,7 +95,7 @@ cd "$HOME/.dotfiles/wm/bspwm"
 ## 🔗 Integration with Base Dotfiles
 
 While this repository operates **100% standalone**, it seamlessly integrates with the base dotfiles ecosystem:
-- 🌐 **Primary Base Repository:** [anthonyportugal/dotfiles](https://github.com/anthonyportugal/dotfiles) *(Active branch: `refactor/modular-dotfiles`)*
+- 🌐 **Primary Base Repository:** [anthonyportugal/dotfiles](https://github.com/anthonyportugal/dotfiles)
 - **Shared Ecosystem:** When installed alongside the base repository, Alacritty terminal styling, Zsh configurations, Neovim setups, and GTK theme preferences are shared effortlessly between X11 and Wayland sessions.
 
 ---
