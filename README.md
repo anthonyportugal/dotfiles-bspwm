@@ -19,6 +19,9 @@ Autonomous, modular, and minimal X11 desktop session optimized for **Arch Linux*
 </p>
 
 > [!TIP]
+> 🧩 **Modular Dotfiles Ecosystem:**  
+> [Base & CLI](https://github.com/anthonyportugal/dotfiles) • [MangoWM (Wayland)](https://github.com/anthonyportugal/dotfiles-mangowm) • **BSPWM (X11) [Current]** • [Wallpapers](https://github.com/anthonyportugal/walls)
+> 
 > This repository provides a standalone, production-ready X11 desktop environment and seamlessly integrates with the base dotfiles ecosystem.
 
 ---
