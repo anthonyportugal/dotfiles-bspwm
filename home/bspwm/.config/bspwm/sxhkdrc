@@ -1,5 +1,5 @@
-# Based on the Archcraft bspwm keybindings.
-# Harmonized with MangoWM standards.
+# BSPWM Desktop Keybindings
+# Harmonized with modular dotfiles ecosystem standards.
 
 # Applications
 super + Return

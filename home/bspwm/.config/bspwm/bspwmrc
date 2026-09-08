@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-# Based on the Archcraft bspwm configuration.
-# Copyright (C) 2020-2026 Aditya Shakya <adi1090x@gmail.com>
-# Standalone adaptation maintained by Anthony Portugal.
+# BSPWM Session Initialization
+# Maintained by Anthony Portugal.
 
 BSPWM_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/bspwm"
 export PATH="$BSPWM_DIR/scripts:$PATH"

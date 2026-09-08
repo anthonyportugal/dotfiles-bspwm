@@ -1,6 +1,6 @@
 /**
  * Catppuccin power menu for the standalone bspwm session.
- * Uses glyphs from Symbols Nerd Font Mono instead of Archcraft's Feather font.
+ * Uses glyphs from Symbols Nerd Font Mono.
  **/
 
 configuration {
