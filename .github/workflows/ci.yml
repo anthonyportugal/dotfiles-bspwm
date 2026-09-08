@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.gitignore'
+      - 'assets/**'
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.gitignore'
+      - 'assets/**'
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: ShellCheck & Syntax
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate syntax (bash -n)
+        run: |
+          bash -n bin/bspwm tests/*.sh
+
+      - name: Run ShellCheck
+        run: |
+          shellcheck bin/bspwm tests/*.sh
+
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (stow)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq stow
+
+      - name: Run smoke tests
+        run: |
+          chmod +x bin/bspwm tests/*.sh
+          ./tests/bootstrap-smoke.sh
+          ./tests/session-smoke.sh
