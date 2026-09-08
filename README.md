@@ -1,6 +1,7 @@
 # BSPWM Dotfiles
 
 <p align="center">
+  <a href="https://github.com/anthonyportugal/dotfiles-bspwm/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/anthonyportugal/dotfiles-bspwm/ci.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white&label=CI" alt="CI"></a>
   <a href="https://kernel.org"><img src="https://img.shields.io/badge/OS-Linux-FCC624?style=flat-square&logo=linux&logoColor=black" alt="Linux"></a>
   <a href="https://archlinux.org"><img src="https://img.shields.io/badge/Arch_Linux-1793D1?style=flat-square&logo=archlinux&logoColor=white" alt="Arch Linux"></a>
   <a href="https://cachyos.org"><img src="https://img.shields.io/badge/CachyOS-Supported-00A86B?style=flat-square" alt="CachyOS"></a>
@@ -20,7 +21,7 @@ Autonomous, modular, and minimal X11 desktop session optimized for **Arch Linux*
 
 > [!TIP]
 > 🧩 **Modular Dotfiles Ecosystem:**  
-> [Base & CLI](https://github.com/anthonyportugal/dotfiles) • [MangoWM (Wayland)](https://github.com/anthonyportugal/dotfiles-mangowm) • **BSPWM (X11) [Current]** • [Wallpapers](https://github.com/anthonyportugal/walls)
+> [Base & CLI](https://github.com/anthonyportugal/dotfiles) • [MangoWM (Wayland)](https://github.com/anthonyportugal/dotfiles-mangowm) • **BSPWM (X11) [Current]** • [Wallpapers](https://github.com/anthonyportugal/walls) • [System (Ly & Limine)](https://github.com/anthonyportugal/dotfiles-system)
 > 
 > This repository provides a standalone, production-ready X11 desktop environment and seamlessly integrates with the base dotfiles ecosystem.
 

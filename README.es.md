@@ -1,26 +1,27 @@
 # BSPWM Dotfiles
 
 <p align="center">
+  <a href="https://github.com/anthonyportugal/dotfiles-bspwm/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/anthonyportugal/dotfiles-bspwm/ci.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white&label=CI" alt="CI"></a>
   <a href="https://kernel.org"><img src="https://img.shields.io/badge/OS-Linux-FCC624?style=flat-square&logo=linux&logoColor=black" alt="Linux"></a>
   <a href="https://archlinux.org"><img src="https://img.shields.io/badge/Arch_Linux-1793D1?style=flat-square&logo=archlinux&logoColor=white" alt="Arch Linux"></a>
   <a href="https://cachyos.org"><img src="https://img.shields.io/badge/CachyOS-Supported-00A86B?style=flat-square" alt="CachyOS"></a>
   <a href="https://www.x.org"><img src="https://img.shields.io/badge/Display-X11-red?style=flat-square&logo=xorg&logoColor=white" alt="X11"></a>
   <a href="https://github.com/baskerville/bspwm"><img src="https://img.shields.io/badge/WM-BSPWM-black?style=flat-square" alt="BSPWM"></a>
-  <a href="https://github.com/catppuccin/catppuccin"><img src="https://img.shields.io/badge/Theme-Catppuccin_Mocha_Pink-f5c2e7?style=flat-square&logo=catppuccin&logoColor=1e1e2e" alt="Tema"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="Licencia"></a>
+  <a href="https://github.com/catppuccin/catppuccin"><img src="https://img.shields.io/badge/Theme-Catppuccin_Mocha_Pink-f5c2e7?style=flat-square&logo=catppuccin&logoColor=1e1e2e" alt="Theme"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="License"></a>
 </p>
 
-*Read this in other languages:* [English](README.md)
+*Leer esto en otros idiomas:* [English](README.md)
 
-Sesión de escritorio X11 autónoma, modular y minimalista optimizada para **Arch Linux** y **CachyOS** basada en [BSPWM](https://github.com/baskerville/bspwm) (Binary Space Partitioning Window Manager) con la paleta Catppuccin Mocha y acentos en Pink. Funciona de manera 100% independiente o compuesta con el ecosistema principal de dotfiles modulares.
+Sesión de escritorio X11 autónoma, modular y minimalista optimizada para **Arch Linux** y **CachyOS** basada en [BSPWM](https://github.com/baskerville/bspwm) y estilizada con la paleta Catppuccin Mocha con acentos Rosa. Funciona de manera totalmente independiente o compuesta dentro del ecosistema modular de dotfiles.
 
 <p align="center">
-  <img src="assets/screenshot.webp" alt="Vista previa de BSPWM Desktop" width="100%">
+  <img src="assets/screenshot.webp" alt="Vista previa del escritorio BSPWM" width="100%">
 </p>
 
 > [!TIP]
 > 🧩 **Ecosistema Modular de Dotfiles:**  
-> [Base y CLI](https://github.com/anthonyportugal/dotfiles) • [MangoWM (Wayland)](https://github.com/anthonyportugal/dotfiles-mangowm) • **BSPWM (X11) [Actual]** • [Fondos de Pantalla](https://github.com/anthonyportugal/walls)
+> [Base y CLI](https://github.com/anthonyportugal/dotfiles) • [MangoWM (Wayland)](https://github.com/anthonyportugal/dotfiles-mangowm) • **BSPWM (X11) [Actual]** • [Fondos de Pantalla](https://github.com/anthonyportugal/walls) • [Capa del Sistema (Ly y Limine)](https://github.com/anthonyportugal/dotfiles-system)
 > 
 > Este repositorio proporciona un entorno de escritorio X11 autónomo y listo para producción, integrándose limpiamente con el ecosistema de dotfiles base.
 
