@@ -7,13 +7,13 @@
   <a href="https://cachyos.org"><img src="https://img.shields.io/badge/CachyOS-Supported-00A86B?style=flat-square" alt="CachyOS"></a>
   <a href="https://www.x.org"><img src="https://img.shields.io/badge/Display-X11-red?style=flat-square&logo=xorg&logoColor=white" alt="X11"></a>
   <a href="https://github.com/baskerville/bspwm"><img src="https://img.shields.io/badge/WM-BSPWM-black?style=flat-square" alt="BSPWM"></a>
-  <a href="https://github.com/catppuccin/catppuccin"><img src="https://img.shields.io/badge/Theme-Catppuccin_Mocha_Pink-f5c2e7?style=flat-square&logo=catppuccin&logoColor=1e1e2e" alt="Theme"></a>
+  <a href="https://github.com/catppuccin/catppuccin"><img src="https://img.shields.io/badge/Theme-Catppuccin_Mocha-f5c2e7?style=flat-square&logo=catppuccin&logoColor=1e1e2e" alt="Theme"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="License"></a>
 </p>
 
 *Leer esto en otros idiomas:* [English](README.md)
 
-Sesión de escritorio X11 autónoma, modular y minimalista optimizada para **Arch Linux** y **CachyOS** basada en [BSPWM](https://github.com/baskerville/bspwm) y estilizada con la paleta Catppuccin Mocha con acentos Rosa. Funciona de manera totalmente independiente o compuesta dentro del ecosistema modular de dotfiles.
+Sesión de escritorio X11 autónoma, modular y minimalista optimizada para **Arch Linux** basada en [BSPWM](https://github.com/baskerville/bspwm) y estilizada con la paleta Catppuccin Mocha con acentos Rosa. Funciona de manera totalmente independiente o compuesta dentro del ecosistema modular de dotfiles.
 
 <p align="center">
   <img src="assets/screenshot.webp" alt="Vista previa del escritorio BSPWM" width="100%">
@@ -103,6 +103,20 @@ cd "$HOME/.dotfiles/wm/bspwm"
 ```
 
 ### 2. Despliegue del Entorno
+
+#### Opción A: Asistente Interactivo de Configuración (Recomendado)
+
+Ejecuta el asistente interactivo para configurar tu perfil y el alcance de instalación:
+
+```bash
+# Lanzar el asistente interactivo (por defecto en inglés)
+./bin/bspwm setup
+
+# O lanzar directamente en español
+./bin/bspwm setup --lang es
+```
+
+#### Opción B: Despliegue Manual por Línea de Comandos
 
 - **Experiencia de Escritorio Completa (Recomendada):**
   ```bash

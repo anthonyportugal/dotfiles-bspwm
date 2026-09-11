@@ -7,13 +7,13 @@
   <a href="https://cachyos.org"><img src="https://img.shields.io/badge/CachyOS-Supported-00A86B?style=flat-square" alt="CachyOS"></a>
   <a href="https://www.x.org"><img src="https://img.shields.io/badge/Display-X11-red?style=flat-square&logo=xorg&logoColor=white" alt="X11"></a>
   <a href="https://github.com/baskerville/bspwm"><img src="https://img.shields.io/badge/WM-BSPWM-black?style=flat-square" alt="BSPWM"></a>
-  <a href="https://github.com/catppuccin/catppuccin"><img src="https://img.shields.io/badge/Theme-Catppuccin_Mocha_Pink-f5c2e7?style=flat-square&logo=catppuccin&logoColor=1e1e2e" alt="Theme"></a>
+  <a href="https://github.com/catppuccin/catppuccin"><img src="https://img.shields.io/badge/Theme-Catppuccin_Mocha-f5c2e7?style=flat-square&logo=catppuccin&logoColor=1e1e2e" alt="Theme"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="License"></a>
 </p>
 
 *Read this in other languages:* [Español](README.es.md)
 
-Autonomous, modular, and minimal X11 desktop session optimized for **Arch Linux** and **CachyOS** based on [BSPWM](https://github.com/baskerville/bspwm) and styled with the Catppuccin Mocha palette with Pink accents. It functions completely standalone or composed with the primary modular dotfiles ecosystem.
+Autonomous, modular, and minimal X11 desktop session optimized for **Arch Linux** based on [BSPWM](https://github.com/baskerville/bspwm) and styled with the Catppuccin Mocha palette with Pink accents. It functions completely standalone or composed with the primary modular dotfiles ecosystem.
 
 <p align="center">
   <img src="assets/screenshot.webp" alt="BSPWM Desktop Preview" width="100%">
@@ -103,6 +103,20 @@ cd "$HOME/.dotfiles/wm/bspwm"
 ```
 
 ### 2. Bootstrap the Environment
+
+#### Option A: Interactive Setup Wizard (Recommended)
+
+Run the interactive setup wizard to configure your profile and installation scope:
+
+```bash
+# Launch interactive wizard (default: English)
+./bin/bspwm setup
+
+# Or launch directly in Spanish
+./bin/bspwm setup --lang es
+```
+
+#### Option B: Manual Command-Line Bootstrap
 
 - **Full Desktop Experience (Recommended):**
   ```bash
