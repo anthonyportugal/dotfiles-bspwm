@@ -33,6 +33,9 @@ super + n
 super + w
 	bspwm-wallpaper select
 
+super + shift + t
+	bspwm-theme menu
+
 super + shift + slash
 	bspwm-keybinds
 
@@ -97,6 +100,13 @@ super + {1-9}
 
 super + shift + {1-9}
 	bspc node -d '^{1-9}' --follow
+
+# Monitor Navigation & Migration
+super + {comma,period}
+	bspc monitor -f {prev,next}
+
+super + shift + {comma,period}
+	bspc node -m {prev,next} --follow
 
 # Navigation & History
 alt + Tab

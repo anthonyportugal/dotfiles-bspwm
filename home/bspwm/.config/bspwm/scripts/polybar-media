@@ -35,5 +35,5 @@ metadata=$(playerctl --player="$player" metadata --format '{{artist}} — {{titl
 if (( ${#metadata} > 24 )); then
   metadata="${metadata:0:23}…"
 fi
-metadata=$(sed 's/%/%%/g' <<< "$metadata")
+metadata="${metadata//%/%%}"
 printf '%%{T2}%s%%{T-} %s\n' "$icon" "$metadata"

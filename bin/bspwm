@@ -1273,6 +1273,41 @@ EOF
     STOW_ENABLED=1
   fi
 
+  local theme_choice=0
+  prompt_choice theme_choice "$(_t "Step 3: Choose Catppuccin Mocha Accent Theme" "Paso 3: Elige el Color de Acento Catppuccin Mocha")" \
+    "Pink [Default / Predeterminado]" \
+    "Mauve" \
+    "Blue" \
+    "Lavender" \
+    "Peach" \
+    "Teal" \
+    "Sapphire" \
+    "Flamingo" \
+    "Green" \
+    "Maroon" \
+    "Red" \
+    "Rosewater" \
+    "Sky" \
+    "Yellow"
+
+  local chosen_accent="pink"
+  case "$theme_choice" in
+    0) chosen_accent="pink" ;;
+    1) chosen_accent="mauve" ;;
+    2) chosen_accent="blue" ;;
+    3) chosen_accent="lavender" ;;
+    4) chosen_accent="peach" ;;
+    5) chosen_accent="teal" ;;
+    6) chosen_accent="sapphire" ;;
+    7) chosen_accent="flamingo" ;;
+    8) chosen_accent="green" ;;
+    9) chosen_accent="maroon" ;;
+    10) chosen_accent="red" ;;
+    11) chosen_accent="rosewater" ;;
+    12) chosen_accent="sky" ;;
+    13) chosen_accent="yellow" ;;
+  esac
+
   printf '\n%b' "$C_BLUE"
   cat <<EOF
 ╭─────────────────────────────────────────────────────────────╮
@@ -1282,6 +1317,7 @@ EOF
   printf '│  • %-20s %-33s│\n' "$(_t "Profile:" "Perfil:")" "$PROFILE"
   printf '│  • %-20s %-33s│\n' "$(_t "Scope:" "Alcance:")" "$MODE_SELECTION"
   printf '│  • %-20s %-33s│\n' "$(_t "Compositor & Bar:" "Compositor y Barra:")" "Picom + Polybar (Catppuccin)"
+  printf '│  • %-20s %-33s│\n' "$(_t "Accent Theme:" "Tema de Acento:")" "catppuccin-mocha-$chosen_accent"
   printf '│  • %-20s %-33s│\n' "$(_t "Target Home:" "Directorio Target:")" "$(prettify_path "$TARGET_DIR")"
   cat <<'EOF'
 ╰─────────────────────────────────────────────────────────────╯
@@ -1289,7 +1325,7 @@ EOF
   printf '%b\n' "$C_RESET"
 
   local action_choice=0
-  prompt_choice action_choice "$(_t "Step 3: How would you like to proceed?" "Paso 3: ¿Cómo deseas proceder?")" \
+  prompt_choice action_choice "$(_t "Step 4: How would you like to proceed?" "Paso 4: ¿Cómo deseas proceder?")" \
     "$(_t "Apply changes now (--apply)" "Aplicar cambios ahora mismo (--apply)")" \
     "$(_t "Dry-run simulation (Check actions without modifying)" "Simulación previa (Ver qué acciones se harían sin modificar)")" \
     "$(_t "Cancel and exit" "Cancelar y salir")"
@@ -1309,6 +1345,11 @@ EOF
 
   COMMAND="bootstrap"
   bootstrap
+
+  if (( APPLY == 1 )) && [[ -x "$REPO_ROOT/home/bspwm/.config/bspwm/scripts/bspwm-theme" ]]; then
+    info "$(_t "Applying accent theme: catppuccin-mocha-$chosen_accent..." "Aplicando tema de acento: catppuccin-mocha-$chosen_accent...")"
+    "$REPO_ROOT/home/bspwm/.config/bspwm/scripts/bspwm-theme" set "catppuccin-mocha-$chosen_accent" || true
+  fi
 
   info "$(_t "BSPWM setup finished successfully." "Configuración de BSPWM finalizada con éxito.")"
 }

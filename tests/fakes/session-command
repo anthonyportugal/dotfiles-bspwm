@@ -19,6 +19,8 @@ case "$command_name" in
       printf '%s\n' "${test_monitors[@]}"
     elif [[ "$*" == "query -N -n focused" ]]; then
       printf '0x00123456\n'
+    elif [[ "$*" == "query -T -m focused" ]]; then
+      printf '{"name":"MONITOR_A","rectangle":{"x":0,"y":0,"width":1920,"height":1080}}\n'
     else
       record "$@"
     fi

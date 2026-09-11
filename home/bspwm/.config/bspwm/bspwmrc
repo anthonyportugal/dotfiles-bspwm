@@ -24,6 +24,11 @@ export BSPWM_TERMINAL_FILE_MANAGER="${BSPWM_TERMINAL_FILE_MANAGER:-yazi}"
 BSPWM_XKB_LAYOUTS="${BSPWM_XKB_LAYOUTS:-us,latam}"
 BSPWM_XKB_OPTIONS="${BSPWM_XKB_OPTIONS:-grp:alt_space_toggle}"
 
+if [[ -r "${XDG_STATE_HOME:-$HOME/.local/state}/bspwm/theme/current/bspwm.env" ]]; then
+  # shellcheck source=/dev/null
+  source "${XDG_STATE_HOME:-$HOME/.local/state}/bspwm/theme/current/bspwm.env"
+fi
+
 BSPWM_FOCUSED_BORDER="${BSPWM_FOCUSED_BORDER:-#F5C2E7}"
 BSPWM_NORMAL_BORDER="${BSPWM_NORMAL_BORDER:-#1E1E2E}"
 BSPWM_ACTIVE_BORDER="${BSPWM_ACTIVE_BORDER:-#F5C2E7}"
@@ -195,7 +200,11 @@ fi
 
 if [[ "${BSPWM_DISABLE_DUNST:-0}" != 1 ]] && command -v dunst >/dev/null; then
   terminate_owned_process dunst
-  dunst --config "$BSPWM_DIR/dunstrc" &
+  dunst_config="$BSPWM_DIR/dunstrc"
+  if [[ -r "${XDG_STATE_HOME:-$HOME/.local/state}/bspwm/theme/current/dunstrc" ]]; then
+    dunst_config="${XDG_STATE_HOME:-$HOME/.local/state}/bspwm/theme/current/dunstrc"
+  fi
+  dunst --config "$dunst_config" &
 fi
 
 if [[ "${BSPWM_DISABLE_PICOM:-0}" != 1 ]] && command -v picom >/dev/null; then

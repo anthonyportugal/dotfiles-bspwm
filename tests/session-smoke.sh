@@ -298,4 +298,30 @@ fi
 [[ $("$CONFIG_ROOT/scripts/bspwm-recording" status) == "stopped" ]] || \
   fail "menu no detuvo la grabación activa"
 
+# bspwm-theme: validación de motor y render de temas
+theme_list=$("$CONFIG_ROOT/scripts/bspwm-theme" list)
+[[ $(grep -c '^catppuccin-mocha-' <<< "$theme_list") -eq 14 ]] || \
+  fail "bspwm-theme list no devolvió los 14 temas Catppuccin Mocha"
+
+"$CONFIG_ROOT/scripts/bspwm-theme" validate catppuccin-mocha-mauve || \
+  fail "bspwm-theme validate falló para catppuccin-mocha-mauve"
+
+"$CONFIG_ROOT/scripts/bspwm-theme" set catppuccin-mocha-mauve
+[[ $("$CONFIG_ROOT/scripts/bspwm-theme" current) == *"catppuccin-mocha-mauve"* ]] || \
+  fail "bspwm-theme current no reportó catppuccin-mocha-mauve tras set"
+
+mauve_theme_dir="$XDG_STATE_HOME/bspwm/theme/current"
+[[ -r "$mauve_theme_dir/bspwm.env" ]] || fail "no se generó bspwm.env para mauve"
+grep -q "BSPWM_FOCUSED_BORDER='#cba6f7'" "$mauve_theme_dir/bspwm.env" || \
+  fail "bspwm.env no contiene el color de acento Mauve"
+grep -q "ACCENT = #cba6f7" "$mauve_theme_dir/polybar-colors.ini" || \
+  fail "polybar-colors.ini no contiene el color de acento Mauve"
+grep -q 'frame_color = "#cba6f7"' "$mauve_theme_dir/dunstrc" || \
+  fail "dunstrc no contiene el color de acento Mauve"
+[[ -r "$mauve_theme_dir/yazi/flavor.toml" ]] || fail "no se compiló el flavor de Yazi"
+
+"$CONFIG_ROOT/scripts/bspwm-theme" set catppuccin-mocha-pink
+[[ $("$CONFIG_ROOT/scripts/bspwm-theme" current) == *"catppuccin-mocha-pink"* ]] || \
+  fail "bspwm-theme no restauró catppuccin-mocha-pink"
+
 printf 'OK: sesión dinámica y helpers principales validados\n'

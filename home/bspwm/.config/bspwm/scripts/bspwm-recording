@@ -75,6 +75,31 @@ cleanup_audio() {
   fi
 }
 
+focused_monitor_geometry() {
+  local mon_x mon_y mon_w mon_h
+  if command -v bspc >/dev/null 2>&1; then
+    local tree
+    tree=$(bspc query -T -m focused 2>/dev/null || true)
+    if [[ "$tree" =~ \"rectangle\":\{[^}]*\"x\":([0-9]+)[^}]*\"y\":([0-9]+)[^}]*\"width\":([0-9]+)[^}]*\"height\":([0-9]+) ]]; then
+      mon_x="${BASH_REMATCH[1]}"
+      mon_y="${BASH_REMATCH[2]}"
+      mon_w="${BASH_REMATCH[3]}"
+      mon_h="${BASH_REMATCH[4]}"
+      printf '%s %s %s %s\n' "$mon_w" "$mon_h" "$mon_x" "$mon_y"
+      return 0
+    fi
+  fi
+  if command -v xdotool >/dev/null 2>&1; then
+    local geom
+    geom=$(xdotool getdisplaygeometry 2>/dev/null || true)
+    if [[ "$geom" =~ ^([0-9]+)[[:space:]]+([0-9]+)$ ]]; then
+      printf '%s %s 0 0\n' "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
+      return 0
+    fi
+  fi
+  return 1
+}
+
 start_recording() {
   local mode=${1:-fullscreen}
   local audio=${2:-none}
@@ -172,12 +197,27 @@ start_recording() {
       -i "${display_num}+${reg_x},${reg_y}"
     )
   else
-    video_args=(
-      -f x11grab
-      -draw_mouse 1
-      -framerate 60
-      -i "${display_num}+0,0"
-    )
+    local mon_geom
+    if mon_geom=$(focused_monitor_geometry 2>/dev/null) && [[ -n "$mon_geom" ]]; then
+      local mon_w mon_h mon_x mon_y
+      read -r mon_w mon_h mon_x mon_y <<< "$mon_geom"
+      (( mon_w = (mon_w / 2) * 2 ))
+      (( mon_h = (mon_h / 2) * 2 ))
+      video_args=(
+        -f x11grab
+        -draw_mouse 1
+        -framerate 60
+        -video_size "${mon_w}x${mon_h}"
+        -i "${display_num}+${mon_x},${mon_y}"
+      )
+    else
+      video_args=(
+        -f x11grab
+        -draw_mouse 1
+        -framerate 60
+        -i "${display_num}+0,0"
+      )
+    fi
   fi
 
   destination_dir=$(recordings_dir)

@@ -17,6 +17,12 @@ POWER_SHUTDOWN=''
 CONFIRM_YES=''
 CONFIRM_NO=''
 
+ROFI_THEME_EXTRA=()
+THEME_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/bspwm/theme/current"
+if [[ -r "$THEME_DIR/rofi-colors.rasi" ]]; then
+  ROFI_THEME_EXTRA=(-theme-str "@import \"$THEME_DIR/rofi-colors.rasi\"")
+fi
+
 if [[ -r "$BSPWM_DIR/local.env" ]]; then
   # shellcheck source=/dev/null
   source "$BSPWM_DIR/local.env"
@@ -59,7 +65,7 @@ confirm_action() {
   local answer
   answer=$(printf '%s\n%s\n' "$CONFIRM_YES" "$CONFIRM_NO" |
     rofi -dmenu -i -selected-row 1 -p "Confirmar" \
-      -mesg "¿Confirmar $action?" -theme "$ROFI_CONFIRM_THEME") || return 1
+      -mesg "¿Confirmar $action?" -theme "$ROFI_CONFIRM_THEME" "${ROFI_THEME_EXTRA[@]}") || return 1
   [[ "$answer" == "$CONFIRM_YES" ]]
 }
 
@@ -89,7 +95,7 @@ run_power_action() {
 
 case "${1-}" in
   drun|run|window)
-    exec rofi -show "$1" -theme "$ROFI_LAUNCHER_THEME"
+    exec rofi -show "$1" -theme "$ROFI_LAUNCHER_THEME" "${ROFI_THEME_EXTRA[@]}"
     ;;
   lock)
     lock_session
@@ -100,7 +106,7 @@ case "${1-}" in
       "$POWER_HIBERNATE" "$POWER_REBOOT" "$POWER_SHUTDOWN" |
       rofi -dmenu -i -p "Sesión" \
         -mesg "Bloquear  ·  Salir  ·  Suspender  ·  Hibernar  ·  Reiniciar  ·  Apagar" \
-        -theme "$ROFI_POWER_THEME") || exit 0
+        -theme "$ROFI_POWER_THEME" "${ROFI_THEME_EXTRA[@]}") || exit 0
     [[ -n "$choice" ]] && run_power_action "$choice"
     ;;
   *)

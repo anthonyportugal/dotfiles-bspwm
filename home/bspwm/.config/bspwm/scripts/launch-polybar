@@ -11,9 +11,14 @@ if [[ -r "$BSPWM_DIR/local.env" ]]; then
 fi
 
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/bspwm/polybar"
+THEME_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/bspwm/theme/current"
 POLYBAR_CONFIG="$POLYBAR_DIR/config.ini"
 POLYBAR_SAFE_RIGHT='memory xkeyboard'
 LAUNCHER_LOG="$STATE_DIR/launcher.log"
+
+if [[ -r "$THEME_DIR/polybar-colors.ini" ]]; then
+  export POLYBAR_COLORS="$THEME_DIR/polybar-colors.ini"
+fi
 
 mkdir -p -- "$STATE_DIR"
 command -v flock >/dev/null 2>&1 || {

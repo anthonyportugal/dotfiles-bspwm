@@ -30,7 +30,8 @@ Autonomous, modular, and minimal X11 desktop session optimized for **Arch Linux*
 ## ✨ Key Highlights
 
 - ⚡ **Lightweight & Blazing Fast:** Minimal memory footprint on X11 with instant binary-tree window partitioning.
-- 🎨 **Catppuccin Mocha Aesthetics:** Consistent styling across Alacritty, Polybar, Rofi, Dunst, and Picom with Pink (`#f5c2e7`) semantic accents.
+- 🎨 **Catppuccin Mocha Aesthetics:** 14 hot-swappable Mocha accent palettes (Pink, Mauve, Blue, Lavender, etc.) via `bspwm-theme` and interactive Rofi menu (`Super + Shift + T`).
+- 🖥️ **Multi-Monitor Aware:** Dynamic workspace balancing across outputs, focused-monitor screen recording, and ergonomic monitor navigation hotkeys.
 - 📊 **Dynamic Polybar:** Real-time auto-detection of active network interfaces (Wi-Fi/Ethernet), battery status, and MPRIS playback.
 - 🎛️ **Ergonomic Hotkeys:** Intuitive keybinding architecture driven by `sxhkd` with integrated interactive help menu (`Super + ?`).
 - 🔋 **Power & Night Light:** Built-in Redshift warm display control and interactive power profile selector (`power-profiles-daemon`).
@@ -173,6 +174,10 @@ While this repository operates **100% standalone**, it seamlessly integrates wit
 | :--- | :--- |
 | `Super + C` / `Super + Shift + C` | Close / Kill focused window |
 | `Super + T` | Toggle layout (*Tiled / Monocle*) |
+| `Super + {1-9}` | Focus workspace 1–9 |
+| `Super + Shift + {1-9}` | Move focused window to workspace 1–9 |
+| `Super + ,` / `Super + .` | Focus previous / next monitor |
+| `Super + Shift + ,` / `Super + Shift + .` | Move focused window to previous / next monitor |
 | `Super + Escape` | Restart BSPWM session and reload SXHKD |
 | `Super + Shift + Escape` | Quit BSPWM session |
 
@@ -180,6 +185,7 @@ While this repository operates **100% standalone**, it seamlessly integrates wit
 
 | Shortcut | Action |
 | :--- | :--- |
+| `Super + Shift + T` | Open Catppuccin Mocha accent theme switcher (Rofi) |
 | `Super + L` | Lock screen immediately (slock / i3lock) |
 | `Super + X` | Open session power menu (Rofi) |
 | `Super + Shift + P` | Open interactive Power Profiles selector (Rofi) |

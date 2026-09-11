@@ -30,7 +30,8 @@ Sesión de escritorio X11 autónoma, modular y minimalista optimizada para **Arc
 ## ✨ Características Principales
 
 - ⚡ **Ligero y Extremadamente Rápido:** Mínimo consumo de memoria en X11 con particionado de ventanas instantáneo en árbol binario.
-- 🎨 **Estética Catppuccin Mocha:** Diseño visual coherente en Alacritty, Polybar, Rofi, Dunst y Picom con acentos semánticos en Pink (`#f5c2e7`).
+- 🎨 **Estética Catppuccin Mocha:** 14 paletas de acento intercambiables en caliente (Pink, Mauve, Blue, Lavender, etc.) mediante `bspwm-theme` y menú interactivo en Rofi (`Super + Shift + T`).
+- 🖥️ **Soporte Multi-Monitor Nativo:** Balanceo dinámico de workspaces entre pantallas, grabación de pantalla enfocada por monitor y atajos ergonómicos de navegación entre salidas.
 - 📊 **Polybar Dinámica:** Detección en tiempo real de interfaces de red activas (Wi-Fi/Ethernet), nivel de batería y reproducción multimedia MPRIS.
 - 🎛️ **Atajos Ergonómicos:** Arquitectura de teclado intuitiva gestionada por `sxhkd` con menú interactivo de ayuda (`Super + ?`).
 - 🔋 **Energía y Luz Nocturna:** Control de temperatura de color con Redshift y selector interactivo de perfiles de energía (`power-profiles-daemon`).
@@ -173,6 +174,10 @@ Aunque este repositorio funciona de forma **100% independiente**, se integra lim
 | :--- | :--- |
 | `Super + C` / `Super + Shift + C` | Cerrar / Forzar cierre de ventana enfocada |
 | `Super + T` | Alternar modo de disposición (*Mosaico / Monóculo*) |
+| `Super + {1-9}` | Cambiar a espacio de trabajo 1–9 |
+| `Super + Shift + {1-9}` | Mover ventana enfocada al espacio de trabajo 1–9 |
+| `Super + ,` / `Super + .` | Cambiar foco al monitor anterior / siguiente |
+| `Super + Shift + ,` / `Super + Shift + .` | Mover ventana enfocada al monitor anterior / siguiente |
 | `Super + Escape` | Reiniciar sesión BSPWM y recargar SXHKD |
 | `Super + Shift + Escape` | Salir de la sesión BSPWM |
 
@@ -180,6 +185,7 @@ Aunque este repositorio funciona de forma **100% independiente**, se integra lim
 
 | Atajo | Acción |
 | :--- | :--- |
+| `Super + Shift + T` | Abrir selector interactivo de temas de acento Catppuccin Mocha (Rofi) |
 | `Super + L` | Bloquear pantalla de inmediato (slock / i3lock) |
 | `Super + X` | Abrir menú de apagado/energía (Rofi) |
 | `Super + Shift + P` | Abrir selector interactivo de perfiles de energía (Rofi) |
