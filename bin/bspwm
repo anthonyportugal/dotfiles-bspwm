@@ -62,18 +62,21 @@ usage_error() {
 usage() {
   cat <<EOF
 Uso:
+  $PROGRAM_NAME setup [opciones]
   $PROGRAM_NAME bootstrap [opciones]
   $PROGRAM_NAME doctor [opciones]
   $PROGRAM_NAME unlink [opciones]
   $PROGRAM_NAME help
 
 Comandos:
+  setup      Asistente interactivo guiado para configurar BSPWM.
   bootstrap  Resuelve dependencias y enlaces. Sólo modifica con --apply.
   doctor     Comprueba dependencias, sintaxis y enlaces sin modificar nada.
   unlink     Retira únicamente los enlaces Stow. Sólo modifica con --apply.
 
 Opciones:
   --profile core|desktop           Perfil acumulativo (default: desktop).
+  --lang en|es                     Idioma para el asistente (default: en).
   --backend auto|shelly|paru|yay|pacman
                                     Backend de paquetes (default: auto).
   --platform auto|cachyos|arch    Plataforma detectada u override explícito.
@@ -84,6 +87,7 @@ Opciones:
   -h, --help                      Muestra esta ayuda.
 
 Ejemplos:
+  $PROGRAM_NAME setup
   $PROGRAM_NAME bootstrap --profile desktop
   $PROGRAM_NAME bootstrap --profile desktop --apply
   $PROGRAM_NAME doctor --profile desktop
@@ -108,7 +112,7 @@ parse_args() {
   shift
 
   case "$COMMAND" in
-    bootstrap|doctor|unlink)
+    setup|bootstrap|doctor|unlink)
       ;;
     help|-h|--help)
       usage
@@ -121,6 +125,16 @@ parse_args() {
 
   while (( $# > 0 )); do
     case "$1" in
+      --lang)
+        require_option_value "$1" "${2-}"
+        DOTFILES_LANG=$2
+        shift 2
+        ;;
+      --lang=*)
+        DOTFILES_LANG=${1#*=}
+        require_option_value "--lang" "$DOTFILES_LANG"
+        shift
+        ;;
       --profile)
         require_option_value "$1" "${2-}"
         PROFILE=$2
@@ -1100,9 +1114,211 @@ unlink_dotfiles() {
   info "Unlink completado"
 }
 
+DOTFILES_LANG="${DOTFILES_LANG:-}"
+
+# shellcheck disable=SC2034
+C_RESET=''
+C_BOLD=''
+C_PINK=''
+C_MAUVE=''
+C_BLUE=''
+C_GREEN=''
+C_YELLOW=''
+C_RED=''
+C_SUBTEXT=''
+
+# shellcheck disable=SC2034
+wizard_colors() {
+  if [[ -t 1 ]] && command -v tput >/dev/null 2>&1 && (( $(tput colors 2>/dev/null || echo 0) >= 8 )); then
+    C_RESET='\033[0m'
+    C_BOLD='\033[1m'
+    C_PINK='\033[38;2;245;194;231m'
+    C_MAUVE='\033[38;2;203;166;247m'
+    C_BLUE='\033[38;2;137;180;250m'
+    C_GREEN='\033[38;2;166;227;161m'
+    C_YELLOW='\033[38;2;249;226;175m'
+    C_RED='\033[38;2;243;139;168m'
+    C_SUBTEXT='\033[38;2;166;173;200m'
+  else
+    C_RESET='' C_BOLD='' C_PINK='' C_MAUVE='' C_BLUE=''
+    C_GREEN='' C_YELLOW='' C_RED='' C_SUBTEXT=''
+  fi
+}
+
+_t() {
+  local en_text=$1
+  local es_text=${2:-$1}
+  if [[ "${DOTFILES_LANG:-en}" == "es" ]]; then
+    printf '%b' "$es_text"
+  else
+    printf '%b' "$en_text"
+  fi
+}
+
+prettify_path() {
+  local p=${1:-}
+  local clean
+  clean="$(cd -P "$p" 2>/dev/null && pwd -P)" || clean="$p"
+  [[ "$clean" == "$HOME"* ]] && clean="~${clean#"$HOME"}"
+  printf '%s' "$clean"
+}
+
+prompt_choice() {
+  local var_name=$1
+  local title=$2
+  shift 2
+  local -a options=("$@")
+  local choice=""
+
+  printf '\n%b%s%b\n' "${C_BOLD}${C_MAUVE}" "$title" "$C_RESET"
+  local i=1
+  for opt in "${options[@]}"; do
+    printf '  %b[%d]%b %s\n' "$C_PINK" "$i" "$C_RESET" "$opt"
+    (( i++ ))
+  done
+
+  while true; do
+    printf '%b%s (1-%d): %b' "$C_BLUE" "$(_t "Select an option" "Selecciona una opción")" "${#options[@]}" "$C_RESET"
+    read -r choice || return 1
+    if [[ "$choice" =~ ^[0-9]+$ ]] && (( choice >= 1 && choice <= ${#options[@]} )); then
+      printf -v "$var_name" '%d' "$(( choice - 1 ))"
+      return 0
+    fi
+    printf '%b%s%b\n' "$C_RED" "$(_t "Invalid option. Please try again." "Opción inválida. Intenta nuevamente.")" "$C_RESET"
+  done
+}
+
+prompt_yes_no() {
+  local question=$1
+  local default_val=${2:-Y}
+  local response=""
+  local prompt_suffix="[Y/n]"
+  [[ "$default_val" =~ ^[Nn]$ ]] && prompt_suffix="[y/N]"
+  if [[ "${DOTFILES_LANG:-en}" == "es" ]]; then
+    prompt_suffix="[S/n]"
+    [[ "$default_val" =~ ^[Nn]$ ]] && prompt_suffix="[s/N]"
+  fi
+
+  while true; do
+    printf '%b%s %b%s%b ' "${C_BOLD}" "$question" "${C_SUBTEXT}" "$prompt_suffix" "$C_RESET"
+    read -r response || return 1
+    if [[ -z "$response" ]]; then
+      response=$default_val
+    fi
+    case "$response" in
+      [yY]|[yY][eE][sS]|[sS]|[sS][iI])
+        return 0
+        ;;
+      [nN]|[nN][oO])
+        return 1
+        ;;
+      *)
+        printf '%b%s%b\n' "$C_RED" "$(_t "Please answer Y or N." "Por favor responde S o N.")" "$C_RESET"
+        ;;
+    esac
+  done
+}
+
+run_interactive_wizard() {
+  wizard_colors
+
+  if [[ -z "${DOTFILES_LANG:-}" ]]; then
+    clear 2>/dev/null || true
+    local lang_choice=0
+    prompt_choice lang_choice "Select language / Selecciona el idioma" \
+      "English [Default]" \
+      "Español"
+    if (( lang_choice == 1 )); then
+      DOTFILES_LANG="es"
+    else
+      DOTFILES_LANG="en"
+    fi
+  fi
+
+  clear 2>/dev/null || true
+  printf '%b' "$C_MAUVE"
+  cat <<'EOF'
+╭─────────────────────────────────────────────────────────────╮
+│                      ANTHONY PORTUGAL                       │
+│                dotfiles-bspwm • Setup Wizard                │
+│             X11 Tiling Window Manager & Polybar             │
+╰─────────────────────────────────────────────────────────────╯
+EOF
+  printf '%b\n' "$C_RESET"
+
+  printf '%b%s%b\n' "$C_BOLD" "$(_t "Detected environment:" "Estado detectado:")" "$C_RESET"
+  printf '  • %s: %s\n' "$(_t "Target Home" "Directorio Home")" "$(prettify_path "$TARGET_DIR")"
+  printf '  • %s: %s\n' "$(_t "Repository Root" "Raíz del Repositorio")" "$(prettify_path "$REPO_ROOT")"
+
+  local profile_choice=1
+  prompt_choice profile_choice "$(_t "Step 1: Select BSPWM Profile" "Paso 1: Selecciona el Perfil de BSPWM")" \
+    "$(_t "Core (Minimal BSPWM + sxhkd + Xorg essentials)" "Core (BSPWM mínimo + sxhkd + esenciales Xorg)")" \
+    "$(_t "Desktop [Recommended] (Full X11 suite: Polybar, Rofi, Picom, Dunst, etc.)" "Desktop [Recomendado] (Suite X11 completa: Polybar, Rofi, Picom, Dunst, etc.)")"
+  case "$profile_choice" in
+    0) PROFILE="core" ;;
+    1) PROFILE="desktop" ;;
+  esac
+
+  local mode_choice=0
+  prompt_choice mode_choice "$(_t "Step 2: Select Installation Scope" "Paso 2: Selecciona el Alcance de la Instalación")" \
+    "$(_t "Complete: Install packages (Repo/AUR) + Deploy Stow symlinks [Recommended]" "Completo: Instalar paquetes (Repo/AUR) + Enlaces Stow [Recomendado]")" \
+    "$(_t "Symlinks only: Deploy Stow configuration only (No package install / No sudo)" "Solo enlaces: Enlazar configuración con Stow (Sin instalar paquetes / Sin sudo)")"
+  if (( mode_choice == 1 )); then
+    MODE_SELECTION="stow"
+    SYSTEM_ENABLED=0
+    STOW_ENABLED=1
+  else
+    MODE_SELECTION="both"
+    SYSTEM_ENABLED=1
+    STOW_ENABLED=1
+  fi
+
+  printf '\n%b' "$C_BLUE"
+  cat <<EOF
+╭─────────────────────────────────────────────────────────────╮
+│                 BSPWM INSTALLATION SUMMARY                  │
+├─────────────────────────────────────────────────────────────┤
+EOF
+  printf '│  • %-20s %-33s│\n' "$(_t "Profile:" "Perfil:")" "$PROFILE"
+  printf '│  • %-20s %-33s│\n' "$(_t "Scope:" "Alcance:")" "$MODE_SELECTION"
+  printf '│  • %-20s %-33s│\n' "$(_t "Compositor & Bar:" "Compositor y Barra:")" "Picom + Polybar (Catppuccin)"
+  printf '│  • %-20s %-33s│\n' "$(_t "Target Home:" "Directorio Target:")" "$(prettify_path "$TARGET_DIR")"
+  cat <<'EOF'
+╰─────────────────────────────────────────────────────────────╯
+EOF
+  printf '%b\n' "$C_RESET"
+
+  local action_choice=0
+  prompt_choice action_choice "$(_t "Step 3: How would you like to proceed?" "Paso 3: ¿Cómo deseas proceder?")" \
+    "$(_t "Apply changes now (--apply)" "Aplicar cambios ahora mismo (--apply)")" \
+    "$(_t "Dry-run simulation (Check actions without modifying)" "Simulación previa (Ver qué acciones se harían sin modificar)")" \
+    "$(_t "Cancel and exit" "Cancelar y salir")"
+
+  case "$action_choice" in
+    0)
+      APPLY=1
+      ;;
+    1)
+      APPLY=0
+      ;;
+    2)
+      info "$(_t "Operation cancelled by user." "Operación cancelada por el usuario.")"
+      return 0
+      ;;
+  esac
+
+  COMMAND="bootstrap"
+  bootstrap
+
+  info "$(_t "BSPWM setup finished successfully." "Configuración de BSPWM finalizada con éxito.")"
+}
+
 main() {
   parse_args "$@"
   case "$COMMAND" in
+    setup)
+      run_interactive_wizard
+      ;;
     bootstrap)
       bootstrap
       ;;
