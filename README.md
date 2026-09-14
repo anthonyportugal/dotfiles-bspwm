@@ -7,13 +7,13 @@
   <a href="https://cachyos.org"><img src="https://img.shields.io/badge/CachyOS-Supported-00A86B?style=flat-square" alt="CachyOS"></a>
   <a href="https://www.x.org"><img src="https://img.shields.io/badge/Display-X11-red?style=flat-square&logo=xorg&logoColor=white" alt="X11"></a>
   <a href="https://github.com/baskerville/bspwm"><img src="https://img.shields.io/badge/WM-BSPWM-black?style=flat-square" alt="BSPWM"></a>
-  <a href="https://github.com/catppuccin/catppuccin"><img src="https://img.shields.io/badge/Theme-Catppuccin_Mocha-f5c2e7?style=flat-square&logo=catppuccin&logoColor=1e1e2e" alt="Theme"></a>
+  <a href="https://github.com/catppuccin/catppuccin"><img src="https://img.shields.io/badge/Theme-Catppuccin_Mocha-cba6f7?style=flat-square&logo=catppuccin&logoColor=1e1e2e" alt="Theme"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="License"></a>
 </p>
 
 *Read this in other languages:* [Español](README.es.md)
 
-Autonomous, modular, and minimal X11 desktop session optimized for **Arch Linux** based on [BSPWM](https://github.com/baskerville/bspwm) and styled with the Catppuccin Mocha palette with Pink accents. It functions completely standalone or composed with the primary modular dotfiles ecosystem.
+Autonomous, modular, and minimal X11 desktop session optimized for **Arch Linux** based on [BSPWM](https://github.com/baskerville/bspwm) and styled with the **Catppuccin Mocha** palette (supporting 14 hot-swappable accents). It functions completely standalone or composed with the primary modular dotfiles ecosystem.
 
 <p align="center">
   <img src="assets/screenshot.webp" alt="BSPWM Desktop Preview" width="100%">
@@ -48,7 +48,7 @@ The BSPWM configuration is organized into cumulative profiles managed with [GNU 
 │                       BSPWM DESKTOP ECOSYSTEM (X11)                    │
 │  ┌──────────────────────────────────────────────────────────────────┐  │
 │  │                    DESKTOP PROFILE (UX & Tools)                  │  │
-│  │  • Status Bar: Polybar (Catppuccin Pink, Dynamic Interfaces)     │  │
+│  │  • Status Bar: Polybar (Catppuccin Mocha, 14 Accents)            │  │
 │  │  • App Launcher & Power Menu: Rofi                               │  │
 │  │  • Notifications: Dunst                                          │  │
 │  │  • Compositor & Shadows: Picom (GLX / XRender)                   │  │
@@ -155,6 +155,29 @@ While this repository operates **100% standalone**, it seamlessly integrates wit
 
 ---
 
+## 🎨 Theme & Appearance
+
+The desktop is styled with **Catppuccin Mocha**, supporting all **14 official accent palettes** (*Rosewater, Flamingo, Pink, Mauve, Red, Maroon, Peach, Yellow, Green, Teal, Sky, Sapphire, Blue, Lavender*) with **Pink (`#f5c2e7`)** configured as the initial default.
+
+- **Interactive Theme Selector:** Press `Super + Shift + T` to switch color palettes in real-time via Rofi.
+- **Dynamic Theming CLI (`bspwm-theme`):**
+  ```bash
+  # Open interactive theme menu
+  bspwm-theme menu
+
+  # Set a specific accent directly (e.g., mauve, blue, teal, peach)
+  bspwm-theme set catppuccin-mocha-mauve
+
+  # List all available Catppuccin Mocha flavors
+  bspwm-theme list
+
+  # Display current active theme
+  bspwm-theme current
+  ```
+- **Atomic Rendering:** The `bspwm-theme` engine compiles palette tokens into runtime configs for BSPWM borders, Polybar, Dunst, Rofi, Picom, and Alacritty under `$XDG_STATE_HOME/bspwm/theme/current/` with atomic symlink promotion and zero background daemons.
+
+---
+
 ## ⌨️ Primary Keybindings
 
 ### Applications & Launchers
@@ -207,6 +230,12 @@ Run the automated test suite locally to verify links, configuration syntax, and 
 ./tests/bootstrap-smoke.sh
 ./tests/session-smoke.sh
 ```
+
+---
+
+## 👤 Author
+
+Architected and maintained by [Anthony Portugal](https://anthonyportugal.github.io).
 
 ---
 

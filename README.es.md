@@ -7,13 +7,13 @@
   <a href="https://cachyos.org"><img src="https://img.shields.io/badge/CachyOS-Supported-00A86B?style=flat-square" alt="CachyOS"></a>
   <a href="https://www.x.org"><img src="https://img.shields.io/badge/Display-X11-red?style=flat-square&logo=xorg&logoColor=white" alt="X11"></a>
   <a href="https://github.com/baskerville/bspwm"><img src="https://img.shields.io/badge/WM-BSPWM-black?style=flat-square" alt="BSPWM"></a>
-  <a href="https://github.com/catppuccin/catppuccin"><img src="https://img.shields.io/badge/Theme-Catppuccin_Mocha-f5c2e7?style=flat-square&logo=catppuccin&logoColor=1e1e2e" alt="Theme"></a>
+  <a href="https://github.com/catppuccin/catppuccin"><img src="https://img.shields.io/badge/Theme-Catppuccin_Mocha-cba6f7?style=flat-square&logo=catppuccin&logoColor=1e1e2e" alt="Theme"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" alt="License"></a>
 </p>
 
 *Leer esto en otros idiomas:* [English](README.md)
 
-Sesión de escritorio X11 autónoma, modular y minimalista optimizada para **Arch Linux** basada en [BSPWM](https://github.com/baskerville/bspwm) y estilizada con la paleta Catppuccin Mocha con acentos Rosa. Funciona de manera totalmente independiente o compuesta dentro del ecosistema modular de dotfiles.
+Sesión de escritorio X11 autónoma, modular y minimalista optimizada para **Arch Linux** basada en [BSPWM](https://github.com/baskerville/bspwm) y estilizada con la paleta **Catppuccin Mocha** (compatible con 14 acentos intercambiables en caliente). Funciona de manera totalmente independiente o compuesta dentro del ecosistema modular de dotfiles.
 
 <p align="center">
   <img src="assets/screenshot.webp" alt="Vista previa del escritorio BSPWM" width="100%">
@@ -48,7 +48,7 @@ La configuración de BSPWM está estructurada en perfiles acumulativos administr
 │                       BSPWM DESKTOP ECOSYSTEM (X11)                    │
 │  ┌──────────────────────────────────────────────────────────────────┐  │
 │  │                    DESKTOP PROFILE (UX & Tools)                  │  │
-│  │  • Barra de Estado: Polybar (Catppuccin Pink, Detección Dinámica)│  │
+│  │  • Barra de Estado: Polybar (Catppuccin Mocha, 14 Acentos)       │  │
 │  │  • Menú de Aplicaciones y Apagado: Rofi                          │  │
 │  │  • Notificaciones: Dunst                                         │  │
 │  │  • Compositor y Sombras: Picom (GLX / XRender)                   │  │
@@ -155,6 +155,29 @@ Aunque este repositorio funciona de forma **100% independiente**, se integra lim
 
 ---
 
+## 🎨 Tema y Apariencia
+
+El escritorio está estilizado con **Catppuccin Mocha**, soportando las **14 paletas oficiales de color de acento** (*Rosewater, Flamingo, Pink, Mauve, Red, Maroon, Peach, Yellow, Green, Teal, Sky, Sapphire, Blue, Lavender*) con **Pink (`#f5c2e7`)** configurado como valor inicial por defecto.
+
+- **Selector Interactivo de Temas:** Presiona `Super + Shift + T` para alternar colores de acento en tiempo real mediante Rofi.
+- **CLI Dinámica de Temas (`bspwm-theme`):**
+  ```bash
+  # Abrir menú interactivo con Rofi
+  bspwm-theme menu
+
+  # Aplicar un acento específico directamente (ej. mauve, blue, teal, peach)
+  bspwm-theme set catppuccin-mocha-mauve
+
+  # Listar todos los colores de acento disponibles
+  bspwm-theme list
+
+  # Mostrar el tema de acento activo
+  bspwm-theme current
+  ```
+- **Renderizado Atómico:** El motor `bspwm-theme` compila los tokens de la paleta en configuraciones en tiempo de ejecución para los bordes de BSPWM, Polybar, Dunst, Rofi, Picom y Alacritty bajo `$XDG_STATE_HOME/bspwm/theme/current/` con promoción atómica de enlaces simbólicos y sin sobrecargar procesos en segundo plano.
+
+---
+
 ## ⌨️ Atajos de Teclado Principales
 
 ### Aplicaciones y Lanzadores
@@ -207,6 +230,12 @@ Ejecuta la suite de smoke tests local para verificar enlaces simbólicos, sintax
 ./tests/bootstrap-smoke.sh
 ./tests/session-smoke.sh
 ```
+
+---
+
+## 👤 Autor
+
+Diseñado y mantenido por [Anthony Portugal](https://anthonyportugal.github.io/es/).
 
 ---
 
