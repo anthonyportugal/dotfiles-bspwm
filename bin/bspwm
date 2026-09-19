@@ -36,16 +36,55 @@ declare -a LINK_DUPLICATES=()
 declare -a LINK_REPLACE=()
 LINK_OK=0
 
+DOTFILES_LANG="${DOTFILES_LANG:-en}"
+FORCE_YES=0
+
+_t() {
+  local en_text=$1
+  local es_text=${2:-$1}
+  if [[ "${DOTFILES_LANG:-en}" == "es" ]]; then
+    printf '%b' "$es_text"
+  else
+    printf '%b' "$en_text"
+  fi
+}
+
+setup_colors() {
+  if [[ -t 1 ]] && command -v tput >/dev/null 2>&1 && (( $(tput colors 2>/dev/null || echo 0) >= 8 )); then
+    C_RESET='\033[0m'
+    C_BOLD='\033[1m'
+    C_PINK='\033[38;2;245;194;231m'
+    C_MAUVE='\033[38;2;203;166;247m'
+    C_BLUE='\033[38;2;137;180;250m'
+    C_GREEN='\033[38;2;166;227;161m'
+    C_YELLOW='\033[38;2;249;226;175m'
+    C_RED='\033[38;2;243;139;168m'
+    C_SUBTEXT='\033[38;2;166;173;200m'
+  else
+    C_RESET='' C_BOLD='' C_PINK='' C_MAUVE='' C_BLUE=''
+    C_GREEN='' C_YELLOW='' C_RED='' C_SUBTEXT=''
+  fi
+}
+setup_colors
+
 info() {
-  printf '==> %s\n' "$*"
+  printf '%b%b[%s]%b %b==>%b %s\n' "$C_MAUVE" "$C_BOLD" "$PROGRAM_NAME" "$C_RESET" "$C_BLUE" "$C_RESET" "$*"
+}
+
+success() {
+  printf '%b%b[%s]%b %b✓%b %b%s%b\n' "$C_MAUVE" "$C_BOLD" "$PROGRAM_NAME" "$C_RESET" "$C_GREEN" "$C_RESET" "$C_BOLD" "$*" "$C_RESET"
 }
 
 warn() {
-  printf 'aviso: %s\n' "$*" >&2
+  local label
+  label=$(_t "warning:" "aviso:")
+  printf '%b%b[%s]%b %b%b%s%b %s\n' "$C_MAUVE" "$C_BOLD" "$PROGRAM_NAME" "$C_RESET" "$C_YELLOW" "$C_BOLD" "$label" "$C_RESET" "$*" >&2
 }
 
 error() {
-  printf 'error: %s\n' "$*" >&2
+  local label
+  label=$(_t "error:" "error:")
+  printf '%b%b[%s]%b %b%b%s%b %s\n' "$C_MAUVE" "$C_BOLD" "$PROGRAM_NAME" "$C_RESET" "$C_RED" "$C_BOLD" "$label" "$C_RESET" "$*" >&2
 }
 
 die() {
@@ -55,45 +94,80 @@ die() {
 
 usage_error() {
   error "$*"
-  printf "Use '%s help' para ver la interfaz.\n" "$PROGRAM_NAME" >&2
+  printf "%s\n" "$(_t "Use '$PROGRAM_NAME help' to view usage." "Use '$PROGRAM_NAME help' para ver la interfaz.")" >&2
   exit 2
 }
 
 usage() {
-  cat <<EOF
+  if [[ "${DOTFILES_LANG:-en}" == "es" ]]; then
+    cat <<EOF
 Uso:
   $PROGRAM_NAME setup [opciones]
-  $PROGRAM_NAME bootstrap [opciones]
+  $PROGRAM_NAME sync [opciones]
+  $PROGRAM_NAME update [opciones]
   $PROGRAM_NAME doctor [opciones]
   $PROGRAM_NAME unlink [opciones]
   $PROGRAM_NAME help
 
 Comandos:
-  setup      Asistente interactivo guiado para configurar BSPWM.
-  bootstrap  Resuelve dependencias y enlaces. Sólo modifica con --apply.
-  doctor     Comprueba dependencias, sintaxis y enlaces sin modificar nada.
-  unlink     Retira únicamente los enlaces Stow. Sólo modifica con --apply.
+  setup       Asistente interactivo guiado para configurar BSPWM.
+  sync        Re-sincroniza enlaces locales y paquetes sin tocar repositorios Git.
+  update      Descarga actualizaciones de GitHub (fast-forward) y re-sincroniza.
+  doctor      Comprueba dependencias, sintaxis y enlaces sin modificar nada.
+  unlink      Retira únicamente los enlaces Stow del sistema.
 
 Opciones:
   --profile core|desktop           Perfil acumulativo (default: desktop).
-  --lang en|es                     Idioma para el asistente (default: en).
+  --lang en|es                     Idioma de la interfaz (default: en).
   --backend auto|shelly|paru|yay|pacman
-                                    Backend de paquetes (default: auto).
-  --platform auto|cachyos|arch    Plataforma detectada u override explícito.
-  --target DIR                    Home objetivo (default: \$HOME).
-  --packages-only                 Opera o valida sólo paquetes del sistema.
-  --stow-only                     Opera o valida sólo paquetes Stow.
-  --apply                         Aplica bootstrap/unlink; sin él hay dry-run.
-  -h, --help                      Muestra esta ayuda.
+                                   Backend de paquetes (default: auto).
+  --platform auto|cachyos|arch     Plataforma detectada u override explícito.
+  --target DIR                     Home objetivo (default: \$HOME).
+  -y, --yes                        Confirmación automática en prompts de actualización.
+  -h, --help                       Muestra esta ayuda.
 
 Ejemplos:
   $PROGRAM_NAME setup
-  $PROGRAM_NAME bootstrap --profile desktop
-  $PROGRAM_NAME bootstrap --profile desktop --apply
-  $PROGRAM_NAME doctor --profile desktop
-  $PROGRAM_NAME unlink --profile desktop
-  $PROGRAM_NAME unlink --profile desktop --apply
+  $PROGRAM_NAME sync
+  $PROGRAM_NAME update
+  $PROGRAM_NAME doctor
+  $PROGRAM_NAME unlink
 EOF
+  else
+    cat <<EOF
+Usage:
+  $PROGRAM_NAME setup [options]
+  $PROGRAM_NAME sync [options]
+  $PROGRAM_NAME update [options]
+  $PROGRAM_NAME doctor [options]
+  $PROGRAM_NAME unlink [options]
+  $PROGRAM_NAME help
+
+Commands:
+  setup       Interactive guided assistant to configure BSPWM.
+  sync        Re-synchronizes local symlinks and packages without touching Git.
+  update      Pulls updates from remote repository (fast-forward) and syncs.
+  doctor      Verifies dependencies, syntax, and symlinks without modifying anything.
+  unlink      Removes GNU Stow symlinks from the system.
+
+Options:
+  --profile core|desktop           Cumulative profile (default: desktop).
+  --lang en|es                     Interface language (default: en).
+  --backend auto|shelly|paru|yay|pacman
+                                   Package backend (default: auto).
+  --platform auto|cachyos|arch     Detected platform or explicit override.
+  --target DIR                     Target home directory (default: \$HOME).
+  -y, --yes                        Automatic yes to update prompts.
+  -h, --help                       Show this help.
+
+Examples:
+  $PROGRAM_NAME setup
+  $PROGRAM_NAME sync
+  $PROGRAM_NAME update
+  $PROGRAM_NAME doctor
+  $PROGRAM_NAME unlink
+EOF
+  fi
 }
 
 require_option_value() {
@@ -103,7 +177,38 @@ require_option_value() {
 }
 
 parse_args() {
+  local -a args_filtered=()
+  while (( $# > 0 )); do
+    case "$1" in
+      --lang)
+        require_option_value "$1" "${2-}"
+        DOTFILES_LANG=$2
+        export DOTFILES_LANG
+        shift 2
+        ;;
+      --lang=*)
+        DOTFILES_LANG=${1#*=}
+        require_option_value "--lang" "$DOTFILES_LANG"
+        export DOTFILES_LANG
+        shift
+        ;;
+      *)
+        args_filtered+=("$1")
+        shift
+        ;;
+    esac
+  done
+  if (( ${#args_filtered[@]} > 0 )); then
+    set -- "${args_filtered[@]}"
+  else
+    set --
+  fi
+
   if (( $# == 0 )); then
+    if [[ -t 0 && -t 1 ]]; then
+      COMMAND="setup"
+      return 0
+    fi
     usage
     exit 0
   fi
@@ -112,19 +217,23 @@ parse_args() {
   shift
 
   case "$COMMAND" in
-    setup|bootstrap|doctor|unlink)
+    setup|sync|update|bootstrap|doctor|unlink)
       ;;
     help|-h|--help)
       usage
       exit 0
       ;;
     *)
-      usage_error "comando desconocido: $COMMAND"
+      usage_error "$(_t "unknown command: $COMMAND" "comando desconocido: $COMMAND")"
       ;;
   esac
 
   while (( $# > 0 )); do
     case "$1" in
+      -y|--yes)
+        FORCE_YES=1
+        shift
+        ;;
       --lang)
         require_option_value "$1" "${2-}"
         DOTFILES_LANG=$2
@@ -1122,45 +1231,8 @@ unlink_dotfiles() {
   info "Unlink completado"
 }
 
-DOTFILES_LANG="${DOTFILES_LANG:-}"
-
-# shellcheck disable=SC2034
-C_RESET=''
-C_BOLD=''
-C_PINK=''
-C_MAUVE=''
-C_BLUE=''
-C_GREEN=''
-C_YELLOW=''
-C_RED=''
-C_SUBTEXT=''
-
-# shellcheck disable=SC2034
 wizard_colors() {
-  if [[ -t 1 ]] && command -v tput >/dev/null 2>&1 && (( $(tput colors 2>/dev/null || echo 0) >= 8 )); then
-    C_RESET='\033[0m'
-    C_BOLD='\033[1m'
-    C_PINK='\033[38;2;245;194;231m'
-    C_MAUVE='\033[38;2;203;166;247m'
-    C_BLUE='\033[38;2;137;180;250m'
-    C_GREEN='\033[38;2;166;227;161m'
-    C_YELLOW='\033[38;2;249;226;175m'
-    C_RED='\033[38;2;243;139;168m'
-    C_SUBTEXT='\033[38;2;166;173;200m'
-  else
-    C_RESET='' C_BOLD='' C_PINK='' C_MAUVE='' C_BLUE=''
-    C_GREEN='' C_YELLOW='' C_RED='' C_SUBTEXT=''
-  fi
-}
-
-_t() {
-  local en_text=$1
-  local es_text=${2:-$1}
-  if [[ "${DOTFILES_LANG:-en}" == "es" ]]; then
-    printf '%b' "$es_text"
-  else
-    printf '%b' "$en_text"
-  fi
+  setup_colors
 }
 
 prettify_path() {
@@ -1362,11 +1434,69 @@ EOF
   info "$(_t "BSPWM setup finished successfully." "Configuración de BSPWM finalizada con éxito.")"
 }
 
+cmd_sync() {
+  info "$(_t "Resynchronizing BSPWM links and packages..." "Re-sincronizando enlaces y paquetes de BSPWM...")"
+  APPLY=1
+  bootstrap
+  success "$(_t "BSPWM resynchronization completed successfully." "Re-sincronización de BSPWM completada exitosamente.")"
+}
+
+cmd_update() {
+  info "$(_t "Checking BSPWM repository for updates..." "Comprobando actualizaciones en el repositorio de BSPWM...")"
+  command_exists git || die "$(_t "git is required to update from remote repositories" "git es necesario para actualizar desde repositorios remotos")"
+
+  local git_status
+  git_status=$(git -C "$REPO_ROOT" status --porcelain 2>/dev/null || true)
+  if [[ -n "$git_status" ]]; then
+    warn "$(_t "Repository has uncommitted local changes; skipping git pull to protect your work" "El repositorio tiene cambios locales sin confirmar; omitiendo git pull para proteger su trabajo")"
+    return 0
+  fi
+
+  local head_before head_after pull_output
+  head_before=$(git -C "$REPO_ROOT" rev-parse HEAD 2>/dev/null || true)
+  if ! pull_output=$(git -C "$REPO_ROOT" pull --ff-only 2>&1); then
+    warn "$(_t "Could not fast-forward; skipping" "No se pudo realizar fast-forward; omitiendo")"
+    [[ -n "$pull_output" ]] && printf '%s\n' "$pull_output"
+    return 1
+  fi
+
+  head_after=$(git -C "$REPO_ROOT" rev-parse HEAD 2>/dev/null || true)
+  if [[ -n "$head_before" && -n "$head_after" && "$head_before" == "$head_after" ]]; then
+    success "$(_t "BSPWM is already up to date. No synchronization needed." "BSPWM ya está al día. No se requiere sincronización.")"
+    return 0
+  fi
+
+  info "$(_t "BSPWM updated" "BSPWM actualizado") (${head_before:0:7}..${head_after:0:7})"
+
+  local do_sync=1
+  if [[ -t 0 && -t 1 ]] && (( ${FORCE_YES:-0} == 0 )); then
+    local question
+    question=$(_t \
+      "BSPWM was updated. Do you want to resynchronize now?" \
+      "BSPWM fue actualizado. ¿Deseas re-sincronizar ahora?")
+    if ! prompt_yes_no "$question" "Y"; then
+      do_sync=0
+    fi
+  fi
+
+  if (( do_sync == 1 )); then
+    cmd_sync
+  else
+    info "$(_t "Resynchronization skipped by user. You can run '$PROGRAM_NAME sync' whenever you want to apply it." "Re-sincronización omitida por el usuario. Puedes ejecutar '$PROGRAM_NAME sync' cuando desees aplicarla.")"
+  fi
+}
+
 main() {
   parse_args "$@"
   case "$COMMAND" in
     setup)
       run_interactive_wizard
+      ;;
+    sync)
+      cmd_sync
+      ;;
+    update)
+      cmd_update
       ;;
     bootstrap)
       bootstrap

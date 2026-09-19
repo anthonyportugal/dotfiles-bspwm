@@ -128,21 +128,30 @@ Ejecuta el asistente interactivo para configurar tu perfil y el alcance de insta
   ./bin/bspwm bootstrap --profile core --apply
   ```
 
-### Flags Útiles del Asistente
+### 3. Comandos Canónicos de la CLI
 
-- **Simulación Dry-run (Modo seguro):** Omite `--apply` para previsualizar los cambios sin modificar el sistema de archivos:
+- **Asistente de Configuración Guiada (`setup`):** Configura el perfil y alcance de forma interactiva:
   ```bash
-  ./bin/bspwm bootstrap --profile desktop
+  ./bin/bspwm setup            # Inglés por defecto
+  ./bin/bspwm setup --lang es  # Interfaz en español
   ```
-- **Diagnósticos:** Verifica dependencias, salud y estado de enlaces:
+- **Sincronización Local (`sync`):** Re-aplica los enlaces simbólicos de GNU Stow y verifica paquetes sin tocar Git:
   ```bash
-  ./bin/bspwm doctor --profile desktop
+  ./bin/bspwm sync
   ```
-- **Desvincular / Limpiar:** Retira los enlaces simbólicos administrados de forma limpia:
+- **Actualización Remota (`update`):** Descarga las últimas actualizaciones de Git vía fast-forward; solicita confirmación antes de sincronizar si hay cambios:
   ```bash
-  ./bin/bspwm unlink --profile desktop --apply
+  ./bin/bspwm update
+  ./bin/bspwm update -y
   ```
-- **Backend AUR:** Detección automática (`shelly`, `paru`, `yay`), o configurable mediante `--backend <nombre>`.
+- **Diagnósticos (`doctor`):** Inspecciona dependencias, validez de configuración y enlaces simbólicos:
+  ```bash
+  ./bin/bspwm doctor
+  ```
+- **Desvincular / Limpiar (`unlink`):** Retira de forma segura los enlaces simbólicos de GNU Stow del sistema:
+  ```bash
+  ./bin/bspwm unlink --apply
+  ```
 
 ---
 

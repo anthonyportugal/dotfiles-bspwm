@@ -128,21 +128,30 @@ Run the interactive setup wizard to configure your profile and installation scop
   ./bin/bspwm bootstrap --profile core --apply
   ```
 
-### Helpful Bootstrap Flags
+### 3. Canonical CLI Commands
 
-- **Dry-run simulation (Safe check):** Omit `--apply` to preview actions without touching the filesystem:
+- **Interactive Guided Setup (`setup`):** Configures profile and installation scope interactively:
   ```bash
-  ./bin/bspwm bootstrap --profile desktop
+  ./bin/bspwm setup            # English by default
+  ./bin/bspwm setup --lang es  # Spanish interface
   ```
-- **Diagnostics:** Check health, dependencies, and symlink integrity:
+- **Local Synchronization (`sync`):** Re-applies GNU Stow symlinks and package checks without touching Git:
   ```bash
-  ./bin/bspwm doctor --profile desktop
+  ./bin/bspwm sync
   ```
-- **Unlink / Clean:** Remove managed symlinks safely:
+- **Remote Update (`update`):** Pulls latest commits from Git via fast-forward; prompts before syncing if changes exist:
   ```bash
-  ./bin/bspwm unlink --profile desktop --apply
+  ./bin/bspwm update
+  ./bin/bspwm update -y
   ```
-- **AUR Backend:** Automatically detected (`shelly`, `paru`, `yay`), or manually specified via `--backend <name>`.
+- **Diagnostics (`doctor`):** Inspects dependencies, configuration validity, and symlinks:
+  ```bash
+  ./bin/bspwm doctor
+  ```
+- **Unlink / Clean (`unlink`):** Safely removes managed GNU Stow symlinks from the system:
+  ```bash
+  ./bin/bspwm unlink --apply
+  ```
 
 ---
 
