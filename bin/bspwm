@@ -468,14 +468,22 @@ package_is_installed() {
 
 classify_packages() {
   local package_name
+  local -A installed_set=()
 
   INSTALLED_REPO_PACKAGES=()
   INSTALLED_AUR_PACKAGES=()
   MISSING_REPO_PACKAGES=()
   MISSING_AUR_PACKAGES=()
 
+  if command_exists pacman; then
+    local pkg
+    while IFS= read -r pkg; do
+      [[ -n "$pkg" ]] && installed_set["$pkg"]=1
+    done < <(pacman -Qq 2>/dev/null || true)
+  fi
+
   for package_name in "${REPO_PACKAGES[@]}"; do
-    if package_is_installed "$package_name"; then
+    if [[ -n "${installed_set[$package_name]:-}" ]]; then
       INSTALLED_REPO_PACKAGES+=("$package_name")
     else
       MISSING_REPO_PACKAGES+=("$package_name")
@@ -483,7 +491,7 @@ classify_packages() {
   done
 
   for package_name in "${AUR_PACKAGES[@]}"; do
-    if package_is_installed "$package_name"; then
+    if [[ -n "${installed_set[$package_name]:-}" ]]; then
       INSTALLED_AUR_PACKAGES+=("$package_name")
     else
       MISSING_AUR_PACKAGES+=("$package_name")
