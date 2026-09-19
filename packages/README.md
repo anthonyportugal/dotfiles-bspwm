@@ -1,57 +1,55 @@
-# Manifiestos de bspwm
+# BSPWM Manifests
 
-Estos archivos son datos de entrada para `bin/bspwm`; no son scripts. Usan un
-nombre por línea, omiten líneas vacías/comentarios y no fijan versiones de una
-distribución rolling.
+*Read this in other languages:* [Español](README.es.md)
 
-## Perfiles
+These files serve as declarative inputs for `bin/bspwm`; they are not executable
+scripts. They use one package name per line, omit blank lines and comments, and
+avoid pinning rolling-release package versions.
 
-Los perfiles son acumulativos:
+## Profiles
 
-| Perfil | Contenido |
-| --- | --- |
-| `core` | Xorg, Xauth, bspwm, sxhkd, GNU Stow y utilidades requeridas por la sesión mínima. |
-| `desktop` | `core` más Polybar, Picom, Rofi, Dunst, `xcape`, audio, capturas, fuentes y aplicaciones usadas por los atajos públicos. |
+Profiles are cumulative:
 
-Ambos seleccionan el único paquete Stow `bspwm`. El perfil predeterminado es
-`desktop`.
+| Profile | Content | Stow Package |
+| --- | --- | --- |
+| `core` | Xorg server, Xauth authorization, bspwm, sxhkd, GNU Stow, display/keyboard utilities (`xorg-xrandr`, `xorg-setxkbmap`, `xorg-xsetroot`), and session locking helpers (`util-linux` / `flock`). | `bspwm` |
+| `desktop` | `core` plus Polybar, Picom compositor, Rofi launcher, Dunst notifications, `xcape` key remapping, Catppuccin lockscreen (`i3lock-color` from AUR), Feh wallpaper daemon, screen capture/recording (Maim, Slop, Satty, FFmpeg), full PipeWire audio (`pipewire`, `pipewire-alsa`, `pipewire-pulse`, `wireplumber`), Playerctl media control, power management (`power-profiles-daemon`), Bluetooth (`bluez-utils`), Redshift night light, `xclip` clipboard, Brave browser, Micro editor, Alacritty terminal, and fonts. | `bspwm` |
 
-## Procedencia
+Both profiles select the single Stow package `bspwm`. The default profile is `desktop`.
 
-La resolución respeta este orden:
+## Provenance
 
-1. repositorios disponibles para CachyOS;
-2. repositorios oficiales de Arch;
-3. AUR sólo cuando no existe un paquete binario apropiado.
+Resolution respects the ecosystem's standard priority:
 
-Los nombres de `repo/` se comprobaron primero en el portal de paquetes de
-CachyOS el 2026-08-21. Son paquetes binarios disponibles mediante los
-repositorios que CachyOS configura, incluidos sus mirrors de Arch. Brave es la
-única excepción con manifests separados: `brave-bin` procede del repositorio
-`cachyos` y queda como fallback AUR en Arch genérico.
+1. CachyOS repositories (e.g., `brave-bin` via `packages/cachyos/desktop.txt`);
+2. Official Arch Linux repositories (`repo/`);
+3. AUR (`aur/`) only when an appropriate official binary package does not exist.
 
-`xorg-xauth` forma parte de `core` porque la primera prueba desde una instalación
-mínima mostró que Ly lo necesita para autorizar la sesión X.
-`xorg-setxkbmap` aplica los layouts portables de la sesión y su selector de
-grupo, sin modificar la política global del sistema. `xcape` pertenece a
-`desktop` y permite abrir Rofi al pulsar y soltar Super sin interferir con los
-atajos que mantienen Super presionada. `util-linux` proporciona `flock`, usado
-para impedir lanzamientos concurrentes de Polybar durante el arranque.
-`i3lock-color` (AUR) proporciona el bloqueador con reloj, fecha y anillo
-Catppuccin en paridad completa con MangoWM; se declara en `packages/aur/desktop.txt`.
-`ffmpeg` y `slop` proporcionan la grabación de pantalla completa y por región
-en paridad funcional con Wayland.
+### Key Technical Decisions
 
-`external/` documenta fuentes que requerirían otro adaptador; actualmente no
-selecciona ninguna.
+- **`xorg-xauth` in `core`:** Essential for lightweight display managers like Ly
+  to authorize the X11 session properly.
+- **`xorg-setxkbmap` and `xorg-xsetroot`:** Apply portable session keyboard layouts
+  (group toggle via Alt+Space) and set the initial cursor without altering global
+  system-level policies.
+- **`util-linux`:** Provides `flock`, used in startup scripts to prevent concurrent
+  or duplicate instances of Polybar and background daemons.
+- **`xcape` in `desktop`:** Allows opening Rofi upon tapping Super alone, without
+  interfering with chorded shortcuts that hold Super down.
+- **`i3lock-color` (AUR):** Delivers a Catppuccin Mocha lockscreen with clock, date,
+  and ring indicators, maintaining full visual parity with MangoWM / Wayland.
+- **Brave Browser:** Declared dual-source: `cachyos/desktop.txt` on CachyOS and
+  `aur/desktop-fallback.txt` on generic Arch Linux.
+- **`external/`:** No direct external downloads are used in this component.
 
 ## Backends
 
-La detección automática intenta Shelly sólo en CachyOS y continúa con `paru`,
-`yay` y `pacman`. Shelly, paru y yay pueden resolver el fallback AUR.
-`pacman` se limita a paquetes binarios y el preflight se detiene si falta un
-paquete AUR.
+Detection attempts Shelly only on CachyOS and continues through `paru`, `yay`,
+and `pacman`. Shelly, paru, and yay can resolve AUR packages (`i3lock-color` and
+the Brave fallback).
+`pacman` is strictly limited to binary packages, and preflight halts execution
+if an AUR package is missing.
 
-Los manifests son autónomos. Pueden repetir aplicaciones también declaradas en
-los dotfiles base; el package manager deduplica la instalación y este
-repositorio no consulta manifests externos.
+Manifests are completely autonomous. They may repeat utilities also declared by
+the base repository; package manager idempotency deduplicates installation
+cleanly without cross-repository manifest inspections.
