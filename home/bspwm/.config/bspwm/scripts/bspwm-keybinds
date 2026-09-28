@@ -25,6 +25,7 @@ keybindings=(
   "󰖔   Super + N                     Alternar Luz Nocturna (On / Off)"
   "⚡  Super + Shift + P             Menú de Perfil de Energía"
   "🖼️   Super + W                     Selector de Wallpapers"
+  "󰖩   Super + Shift + W             Menú de Redes Wi-Fi (Rofi)"
   "🎨  Super + Shift + T             Selector de Temas (Catppuccin Mocha Accents)"
   "📸  Super + S / Print             Captura de Pantalla Completa"
   "📸  Super + Shift + S             Captura de Pantalla con Anotación (Satty)"

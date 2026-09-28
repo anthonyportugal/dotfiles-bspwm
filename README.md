@@ -223,6 +223,7 @@ The desktop is styled with **Catppuccin Mocha**, supporting all **14 official ac
 | `Super + Shift + P` | Open interactive Power Profiles selector (Rofi) |
 | `Super + N` | Toggle warm night light (Redshift) |
 | `Super + W` | Select wallpaper from gallery via Rofi (Feh) |
+| `Super + Shift + W` | Open interactive Wi-Fi network menu (Rofi) |
 | `Alt + Space` | Toggle keyboard layout between US and Latin America |
 | `Print` / `Super + S` | Fullscreen screenshot |
 | `Super + Shift + S` | Interactive region screenshot with Satty annotation editor |

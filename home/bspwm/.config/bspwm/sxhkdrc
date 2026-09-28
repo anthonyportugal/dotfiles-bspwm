@@ -33,6 +33,9 @@ super + n
 super + w
 	bspwm-wallpaper select
 
+super + shift + w
+	bspwm-wifi select
+
 super + shift + t
 	bspwm-theme menu
 

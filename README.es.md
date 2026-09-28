@@ -223,6 +223,7 @@ El escritorio está estilizado con **Catppuccin Mocha**, soportando las **14 pal
 | `Super + Shift + P` | Abrir selector interactivo de perfiles de energía (Rofi) |
 | `Super + N` | Activar / desactivar filtro de luz nocturna (Redshift) |
 | `Super + W` | Seleccionar fondo de pantalla desde la galería vía Rofi (Feh) |
+| `Super + Shift + W` | Abrir menú interactivo de redes Wi-Fi (Rofi) |
 | `Alt + Space` | Alternar distribución de teclado entre US y Latinoamérica |
 | `Print` / `Super + S` | Captura de pantalla completa |
 | `Super + Shift + S` | Captura interactiva por región con editor de anotaciones Satty |
