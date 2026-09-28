@@ -19,6 +19,12 @@ is_enabled() {
   [[ -f "$state_file" ]] && [[ "$(<"$state_file")" == "on" ]]
 }
 
+notify_polybar() {
+  if command -v polybar-msg >/dev/null 2>&1; then
+    polybar-msg action "#nightlight.hook.0" 2>/dev/null || true
+  fi
+}
+
 enable() {
   if command -v redshift >/dev/null 2>&1; then
     pkill -9 -x redshift 2>/dev/null || true
@@ -40,6 +46,7 @@ enable() {
   if command -v notify-send >/dev/null 2>&1; then
     notify-send -h string:x-dunst-stack-tag:bspwm-nightlight "Luz Nocturna" "Activada (${temp}K)"
   fi
+  notify_polybar
 }
 
 disable() {
@@ -52,6 +59,7 @@ disable() {
   if command -v notify-send >/dev/null 2>&1; then
     notify-send -h string:x-dunst-stack-tag:bspwm-nightlight "Luz Nocturna" "Desactivada"
   fi
+  notify_polybar
 }
 
 status_polybar() {

@@ -27,6 +27,12 @@ get_current() {
   powerprofilesctl get 2>/dev/null || printf 'balanced\n'
 }
 
+notify_polybar() {
+  if command -v polybar-msg >/dev/null 2>&1; then
+    polybar-msg action "#power-profile.hook.0" 2>/dev/null || true
+  fi
+}
+
 set_profile() {
   local target=$1
   if powerprofilesctl set "$target" 2>/dev/null; then
@@ -40,6 +46,7 @@ set_profile() {
     if command -v notify-send >/dev/null 2>&1; then
       notify-send -h string:x-dunst-stack-tag:bspwm-power "Perfil de Energía" "$icon $label activo"
     fi
+    notify_polybar
   fi
 }
 

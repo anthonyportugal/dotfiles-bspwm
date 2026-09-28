@@ -10,6 +10,12 @@ is_inhibited() {
   [[ -f "$state_file" ]] && [[ "$(<"$state_file")" == "on" ]]
 }
 
+notify_polybar() {
+  if command -v polybar-msg >/dev/null 2>&1; then
+    polybar-msg action "#idle-inhibitor.hook.0" 2>/dev/null || true
+  fi
+}
+
 toggle() {
   if is_inhibited; then
     xset s on +dpms 2>/dev/null || true
@@ -24,6 +30,7 @@ toggle() {
       notify-send -h string:x-dunst-stack-tag:bspwm-idle "Inhibidor de Reposo" "󰅶 Modo presentación activo (pantalla siempre encendida)"
     fi
   fi
+  notify_polybar
 }
 
 polybar_status() {
