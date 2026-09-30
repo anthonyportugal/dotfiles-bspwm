@@ -27,11 +27,32 @@ jobs:
 
       - name: Validate syntax (bash -n)
         run: |
-          bash -n bin/bspwm tests/*.sh
+          bash -n bin/bspwm tests/*.sh .githooks/*
 
       - name: Run ShellCheck
         run: |
-          shellcheck bin/bspwm tests/*.sh
+          shellcheck bin/bspwm tests/*.sh .githooks/*
+
+      - name: Scan for secrets
+        run: |
+          PATTERNS=(
+            '-----BEGIN ([A-Z0-9]+[[:space:]])*PRIVATE KEY-----'
+            '(AKIA|ASIA)[A-Z0-9]{16}'
+            'github_pat_[A-Za-z0-9_]{20,}'
+            'gh[pousr]_[A-Za-z0-9]{20,}'
+            'sk-[A-Za-z0-9_-]{20,}'
+            '(OPENAI_API_KEY|GEMINI_API_KEY|ANTHROPIC_API_KEY|GITHUB_TOKEN)[[:space:]]*=[[:space:]]*["'\'']?[A-Za-z0-9]'
+          )
+          GIT_PATTERNS=()
+          for p in "${PATTERNS[@]}"; do
+            GIT_PATTERNS+=(-e "$p")
+          done
+          if git grep --ignore-case -I -q -E "${GIT_PATTERNS[@]}" -- . 2>/dev/null; then
+            echo "::error::Potential secret detected in repository!"
+            git grep --ignore-case -I -l -E "${GIT_PATTERNS[@]}" -- .
+            exit 1
+          fi
+
 
   test:
     name: Test Suite
