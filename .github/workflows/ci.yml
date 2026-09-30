@@ -48,5 +48,4 @@ jobs:
       - name: Run smoke tests
         run: |
           chmod +x bin/bspwm tests/*.sh
-          ./tests/bootstrap-smoke.sh
-          ./tests/session-smoke.sh
+          ./tests/smoke.sh

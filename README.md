@@ -237,8 +237,7 @@ The desktop is styled with **Catppuccin Mocha**, supporting all **14 official ac
 Run the automated test suite locally to verify links, configuration syntax, and session scripts:
 
 ```bash
-./tests/bootstrap-smoke.sh
-./tests/session-smoke.sh
+./tests/smoke.sh
 ```
 
 ---

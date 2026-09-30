@@ -237,8 +237,7 @@ El escritorio está estilizado con **Catppuccin Mocha**, soportando las **14 pal
 Ejecuta la suite de smoke tests local para verificar enlaces simbólicos, sintaxis de scripts y la sesión:
 
 ```bash
-./tests/bootstrap-smoke.sh
-./tests/session-smoke.sh
+./tests/smoke.sh
 ```
 
 ---
