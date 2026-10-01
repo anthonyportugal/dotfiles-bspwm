@@ -39,6 +39,9 @@ super + shift + w
 super + shift + t
 	bspwm-theme menu
 
+super + shift + i
+	polybar-idle-inhibitor toggle
+
 super + shift + slash
 	bspwm-keybinds
 

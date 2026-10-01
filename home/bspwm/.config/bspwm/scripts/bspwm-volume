@@ -7,7 +7,9 @@ command -v wpctl >/dev/null 2>&1 || {
   exit 127
 }
 
-case "${1-}" in
+action="${1-}"
+
+case "$action" in
   up)
     wpctl set-volume --limit 1.0 @DEFAULT_AUDIO_SINK@ 5%+
     ;;
@@ -26,7 +28,29 @@ case "${1-}" in
     ;;
 esac
 
-status=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null || true)
-if command -v notify-send >/dev/null 2>&1; then
-  notify-send -h string:x-dunst-stack-tag:bspwm-volume "Volumen" "$status"
+command -v notify-send >/dev/null 2>&1 || exit 0
+
+if [[ "$action" == "mic-mute" ]]; then
+  status=$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@ 2>/dev/null || true)
+  if grep -q 'MUTED' <<< "$status"; then
+    notify-send -h string:x-dunst-stack-tag:bspwm-mic "Micrófono" "󰍭 Silenciado"
+  else
+    notify-send -h string:x-dunst-stack-tag:bspwm-mic "Micrófono" "󰍬 Activo"
+  fi
+else
+  status=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null || true)
+  if grep -q 'MUTED' <<< "$status"; then
+    notify-send -h string:x-dunst-stack-tag:bspwm-volume "Volumen" "󰝟 Silenciado"
+  else
+    vol=$(awk '{print int(($2 * 100) + 0.5)}' <<< "$status")
+    vol=${vol:-0}
+    if (( vol < 33 )); then
+      icon="󰕿"
+    elif (( vol < 66 )); then
+      icon="󰖀"
+    else
+      icon="󰕾"
+    fi
+    notify-send -h string:x-dunst-stack-tag:bspwm-volume -h "int:value:$vol" "Volumen: ${vol}%" "$icon"
+  fi
 fi
