@@ -35,8 +35,40 @@ mkdir "$TARGET_DIR" "$CONFLICT_DIR" "$PARENT_CONFLICT_DIR" \
   "$PARENT_DESTINATION" "$SCOPE_REPO" "$SCOPE_TARGET" "$FAKE_BIN"
 
 # Dry-run, aplicación, doctor e idempotencia sobre un home desechable.
+RECEIPT_FILE="$TARGET_DIR/.local/state/dotfiles/bspwm.receipt"
+
+# 1. Bootstrap dry-run NO debe crear el recibo
 "$DOTFILES" bootstrap --profile desktop --stow-only --target "$TARGET_DIR"
+[[ ! -f "$RECEIPT_FILE" ]] || fail "bootstrap dry-run creó el recibo de estado inesperadamente"
+
+# 2. Bootstrap --apply crea el recibo con los campos esperados
 "$DOTFILES" bootstrap --profile desktop --stow-only --target "$TARGET_DIR" --apply
+[[ -f "$RECEIPT_FILE" ]] || fail "bootstrap --apply no creó el recibo de estado"
+grep -qx 'RECEIPT_VERSION=1' "$RECEIPT_FILE" || fail "el recibo no define RECEIPT_VERSION=1"
+grep -qx 'COMPONENT="bspwm"' "$RECEIPT_FILE" || fail "el recibo no define COMPONENT=\"bspwm\""
+grep -qx 'PROFILE="desktop"' "$RECEIPT_FILE" || fail "el recibo no define PROFILE=\"desktop\""
+grep -q '^BACKEND=' "$RECEIPT_FILE" || fail "el recibo no define BACKEND"
+grep -q '^UPDATED_AT=' "$RECEIPT_FILE" || fail "el recibo no define UPDATED_AT"
+
+# 3. Doctor y bootstrap sin --profile reutilizan el perfil guardado en el recibo
+"$DOTFILES" doctor --stow-only --target "$TARGET_DIR" > "$TEST_ROOT/doctor-receipt-desktop.out"
+grep -Eq 'Perfil:[[:space:]]+desktop' "$TEST_ROOT/doctor-receipt-desktop.out" || \
+  fail "doctor no reutilizó el perfil desktop guardado en el recibo"
+
+"$DOTFILES" bootstrap --stow-only --target "$TARGET_DIR" > "$TEST_ROOT/bootstrap-receipt-desktop.out"
+grep -Eq 'Perfil:[[:space:]]+desktop' "$TEST_ROOT/bootstrap-receipt-desktop.out" || \
+  fail "bootstrap no reutilizó el perfil desktop guardado en el recibo"
+
+# 4. Override explícito con --profile core ignora el perfil del recibo
+"$DOTFILES" doctor --profile core --stow-only --target "$TARGET_DIR" > "$TEST_ROOT/doctor-override-core.out"
+grep -Eq 'Perfil:[[:space:]]+core' "$TEST_ROOT/doctor-override-core.out" || \
+  fail "el flag explícito --profile core no sobreescribió el recibo desktop en doctor"
+
+"$DOTFILES" bootstrap --profile core --stow-only --target "$TARGET_DIR" > "$TEST_ROOT/bootstrap-override-core.out"
+grep -Eq 'Perfil:[[:space:]]+core' "$TEST_ROOT/bootstrap-override-core.out" || \
+  fail "el flag explícito --profile core no sobreescribió el recibo desktop en bootstrap"
+
+# 5. Doctor e idempotencia con desktop
 "$DOTFILES" doctor --profile desktop --stow-only --target "$TARGET_DIR"
 "$DOTFILES" bootstrap --profile desktop --stow-only --target "$TARGET_DIR" --apply
 
@@ -77,7 +109,9 @@ fi
 
 # Unlink también simula primero y nunca retira paquetes del sistema.
 "$DOTFILES" unlink --profile desktop --target "$TARGET_DIR"
+[[ -f "$RECEIPT_FILE" ]] || fail "unlink dry-run eliminó el recibo de estado prematuramente"
 "$DOTFILES" unlink --profile desktop --target "$TARGET_DIR" --apply
+[[ ! -f "$RECEIPT_FILE" ]] || fail "unlink --apply no eliminó el recibo de estado"
 if "$DOTFILES" doctor --profile desktop --stow-only --target "$TARGET_DIR" \
     > "$TEST_ROOT/doctor-after-unlink.out" 2>&1; then
   fail "doctor debía detectar los enlaces ausentes después de unlink"

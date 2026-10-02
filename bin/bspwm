@@ -10,9 +10,12 @@ PACKAGES_DIR="$REPO_ROOT/packages"
 
 COMMAND=""
 PROFILE="desktop"
+PROFILE_EXPLICIT=0
 BACKEND_REQUEST="auto"
 PLATFORM_REQUEST="auto"
 TARGET_DIR=${HOME:?HOME no está definida}
+STATE_DIR="${TARGET_DIR}/.local/state/dotfiles"
+RECEIPT_FILE="$STATE_DIR/bspwm.receipt"
 APPLY=0
 SYSTEM_ENABLED=1
 STOW_ENABLED=1
@@ -20,6 +23,11 @@ MODE_SELECTION="both"
 
 PLATFORM=""
 BACKEND=""
+
+sync_state_paths() {
+  STATE_DIR="${TARGET_DIR}/.local/state/dotfiles"
+  RECEIPT_FILE="$STATE_DIR/bspwm.receipt"
+}
 
 declare -a REPO_PACKAGES=()
 declare -a AUR_PACKAGES=()
@@ -247,11 +255,13 @@ parse_args() {
       --profile)
         require_option_value "$1" "${2-}"
         PROFILE=$2
+        PROFILE_EXPLICIT=1
         shift 2
         ;;
       --profile=*)
         PROFILE=${1#*=}
         require_option_value "--profile" "$PROFILE"
+        PROFILE_EXPLICIT=1
         shift
         ;;
       --backend)
@@ -277,11 +287,13 @@ parse_args() {
       --target)
         require_option_value "$1" "${2-}"
         TARGET_DIR=$2
+        sync_state_paths
         shift 2
         ;;
       --target=*)
         TARGET_DIR=${1#*=}
         require_option_value "--target" "$TARGET_DIR"
+        sync_state_paths
         shift
         ;;
       --packages-only)
@@ -1054,6 +1066,9 @@ preflight() {
   command_exists find || die "falta el comando requerido: find"
   command_exists realpath || die "falta el comando requerido: realpath"
 
+  TARGET_DIR=$(realpath -m -- "$TARGET_DIR")
+  sync_state_paths
+
   if (( SYSTEM_ENABLED == 1 )); then
     [[ -d "$PACKAGES_DIR" ]] || die "no existe $PACKAGES_DIR"
     command_exists pacman || die "pacman es necesario para resolver el estado de paquetes"
@@ -1061,7 +1076,6 @@ preflight() {
 
   if (( STOW_ENABLED == 1 )); then
     [[ -f "$STOW_DIR/.stow" ]] || die "falta el marcador $STOW_DIR/.stow"
-    TARGET_DIR=$(realpath -m -- "$TARGET_DIR")
     [[ -d "$TARGET_DIR" ]] || die "el target no es un directorio existente: $TARGET_DIR"
     [[ "$TARGET_DIR" != "/" ]] || die "se rechaza usar / como target de Stow"
     if (( APPLY == 1 )); then
@@ -1073,8 +1087,89 @@ preflight() {
   fi
 }
 
+load_receipt() {
+  sync_state_paths
+  [[ -f "$RECEIPT_FILE" && -r "$RECEIPT_FILE" ]] || return 0
+
+  local line key raw_val val
+  local receipt_version="" receipt_component="" receipt_profile="" receipt_backend=""
+
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    line=$(trim_line "$line")
+    [[ -z "$line" || "$line" == \#* ]] && continue
+    [[ "$line" == *=* ]] || continue
+    key=${line%%=*}
+    raw_val=${line#*=}
+    if [[ "$raw_val" =~ ^\"(.*)\"$ ]] || [[ "$raw_val" =~ ^\'(.*)\'$ ]]; then
+      val="${BASH_REMATCH[1]}"
+    else
+      val="$raw_val"
+    fi
+
+    case "$key" in
+      RECEIPT_VERSION) receipt_version="$val" ;;
+      COMPONENT)       receipt_component="$val" ;;
+      PROFILE)         receipt_profile="$val" ;;
+      BACKEND)         receipt_backend="$val" ;;
+    esac
+  done < "$RECEIPT_FILE"
+
+  if [[ "$receipt_version" != "1" ]]; then
+    warn "$(_t "ignoring receipt with unsupported version: $receipt_version" "ignorando recibo con versión no soportada: $receipt_version")"
+    return 0
+  fi
+
+  if [[ "$receipt_component" != "bspwm" ]]; then
+    warn "$(_t "ignoring receipt for different component: ${receipt_component:-unknown}" "ignorando recibo para un componente diferente: ${receipt_component:-desconocido}")"
+    return 0
+  fi
+
+  if (( PROFILE_EXPLICIT == 0 )) && [[ -n "$receipt_profile" ]]; then
+    case "$receipt_profile" in
+      core|desktop)
+        PROFILE="$receipt_profile"
+        ;;
+      *)
+        warn "$(_t "ignoring invalid profile in receipt: $receipt_profile" "ignorando perfil inválido en el recibo: $receipt_profile")"
+        ;;
+    esac
+  fi
+
+  if [[ "$BACKEND_REQUEST" == "auto" ]] && [[ -n "$receipt_backend" ]]; then
+    case "$receipt_backend" in
+      shelly|paru|yay|pacman)
+        if command_exists "$receipt_backend"; then
+          BACKEND_REQUEST="$receipt_backend"
+          BACKEND="$receipt_backend"
+        fi
+        ;;
+      *)
+        warn "$(_t "ignoring invalid backend in receipt: $receipt_backend" "ignorando backend inválido en el recibo: $receipt_backend")"
+        ;;
+    esac
+  fi
+}
+
+save_receipt() {
+  sync_state_paths
+  mkdir -p "$STATE_DIR"
+
+  local tmp_receipt
+  tmp_receipt=$(mktemp "$STATE_DIR/bspwm.receipt.XXXXXX")
+  cat > "$tmp_receipt" <<EOF
+RECEIPT_VERSION=1
+COMPONENT="bspwm"
+PROFILE="$PROFILE"
+BACKEND="$BACKEND"
+UPDATED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+EOF
+  mv -f "$tmp_receipt" "$RECEIPT_FILE"
+  info "Recibo de estado guardado en $RECEIPT_FILE"
+}
+
 prepare() {
   preflight
+  load_receipt
 
   if (( SYSTEM_ENABLED == 1 )); then
     detect_platform
@@ -1180,6 +1275,7 @@ bootstrap() {
     prune_dangling_dotfiles_links 1
   fi
 
+  save_receipt
   info "Bootstrap completado"
 }
 
@@ -1237,6 +1333,8 @@ unlink_dotfiles() {
   run_stow delete 0 || die "GNU Stow no pudo retirar los enlaces"
   prune_dangling_dotfiles_links 1
   validate_links_unlinked || die "falló la validación posterior de unlink"
+  sync_state_paths
+  rm -f -- "$RECEIPT_FILE"
   info "Unlink completado"
 }
 
@@ -1324,6 +1422,8 @@ run_interactive_wizard() {
     fi
   fi
 
+  load_receipt
+
   clear 2>/dev/null || true
   printf '%b' "$C_MAUVE"
   cat <<'EOF'
@@ -1340,6 +1440,9 @@ EOF
   printf '  • %s: %s\n' "$(_t "Repository Root" "Raíz del Repositorio")" "$(prettify_path "$REPO_ROOT")"
 
   local profile_choice=1
+  if [[ "$PROFILE" == "core" ]]; then
+    profile_choice=0
+  fi
   prompt_choice profile_choice "$(_t "Step 1: Select BSPWM Profile" "Paso 1: Selecciona el Perfil de BSPWM")" \
     "$(_t "Core (Minimal BSPWM + sxhkd + Xorg essentials)" "Core (BSPWM mínimo + sxhkd + esenciales Xorg)")" \
     "$(_t "Desktop [Recommended] (Full X11 suite: Polybar, Rofi, Picom, Dunst, etc.)" "Desktop [Recomendado] (Suite X11 completa: Polybar, Rofi, Picom, Dunst, etc.)")"
@@ -1347,6 +1450,7 @@ EOF
     0) PROFILE="core" ;;
     1) PROFILE="desktop" ;;
   esac
+  PROFILE_EXPLICIT=1
 
   local mode_choice=0
   prompt_choice mode_choice "$(_t "Step 2: Select Installation Scope" "Paso 2: Selecciona el Alcance de la Instalación")" \
