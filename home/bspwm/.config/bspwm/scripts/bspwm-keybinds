@@ -29,6 +29,7 @@ keybindings=(
   "🎨  Super + Shift + T             Selector de Temas (Catppuccin Mocha Accents)"
   "📸  Super + S / Print             Captura de Pantalla Completa"
   "📸  Super + Shift + S             Captura de Pantalla con Anotación (Satty)"
+  "🎯  Super + P                     Selector de Color (xcolor)"
   "⏺️   Super + R                     Grabar Pantalla Completa (FFmpeg)"
   "⏺️   Super + Shift + R             Grabar Región de Pantalla (FFmpeg)"
   "🎙️   Super + Alt + R               Menú de Grabación (Opciones de Audio)"

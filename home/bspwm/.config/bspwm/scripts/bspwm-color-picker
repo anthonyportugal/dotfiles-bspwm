@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+command -v xcolor >/dev/null 2>&1 || {
+  printf 'bspwm-color-picker: xcolor no está instalado\n' >&2
+  if command -v notify-send >/dev/null 2>&1; then
+    notify-send -u critical "Color Picker" "Instala el comando: xcolor"
+  fi
+  exit 127
+}
+
+raw_output=$(xcolor --format hex 2>/dev/null || true)
+color=$(grep -Eo '#[0-9a-fA-F]{6}' <<< "$raw_output" | tail -n 1 || true)
+if [[ -z "$color" ]]; then
+  exit 0
+fi
+
+if command -v xclip >/dev/null 2>&1; then
+  printf '%s' "$color" | xclip -selection clipboard
+  clipboard_note=' y copiado al portapapeles'
+else
+  clipboard_note=''
+fi
+
+if command -v notify-send >/dev/null 2>&1; then
+  notify-send -h string:x-dunst-stack-tag:bspwm-color-picker "Color copiado" "$color$clipboard_note"
+fi
+
+printf '%s\n' "$color"

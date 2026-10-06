@@ -55,6 +55,10 @@ super + shift + s
 Print
 	bspwm-screenshot full
 
+# Color Picker
+super + p
+	bspwm-color-picker
+
 # Screen Recording
 super + r
 	bspwm-recording toggle

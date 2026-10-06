@@ -57,6 +57,8 @@ fake_commands=(
   systemctl
   systemd-run
   xcape
+  xclip
+  xcolor
   xdotool
   xsetroot
 )
@@ -122,6 +124,11 @@ media_output=$("$CONFIG_ROOT/scripts/polybar-media")
 
 bluetooth_output=$("$CONFIG_ROOT/scripts/polybar-bluetooth")
 [[ "$bluetooth_output" == *Headphones* ]] || fail "el módulo Bluetooth no mostró el dispositivo conectado"
+
+color_output=$("$CONFIG_ROOT/scripts/bspwm-color-picker")
+[[ "$color_output" == "#cba6f7" ]] || fail "bspwm-color-picker no retornó el color esperado"
+grep -q '^xclip -selection clipboard$' "$TEST_LOG" || fail "bspwm-color-picker no copió al clipboard"
+grep -q '^super + p$' "$CONFIG_ROOT/sxhkdrc" || fail "falta el atajo super + p en sxhkdrc"
 
 POLYBAR_THEME="$CONFIG_ROOT/themes/catppuccin/polybar"
 for geometry_setting in 'width = 100%' 'offset-x = 0' 'offset-y = 0' 'radius = 0'; do

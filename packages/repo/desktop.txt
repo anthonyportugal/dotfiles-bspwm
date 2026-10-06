@@ -29,5 +29,6 @@ tumbler
 wireplumber
 xcape
 xclip
+xcolor
 xdg-user-dirs
 yazi

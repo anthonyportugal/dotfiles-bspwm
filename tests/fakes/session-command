@@ -110,6 +110,13 @@ case "$command_name" in
   slop)
     printf '800 600 100 200\n'
     ;;
+  xcolor)
+    printf '#cba6f7\n'
+    ;;
+  xclip)
+    record "$@"
+    command cat >/dev/null || true
+    ;;
   xdotool)
     printf '1920 1080\n'
     ;;
