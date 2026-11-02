@@ -1,5 +1,11 @@
 # BSPWM Dotfiles
 
+> [!WARNING]
+> **Este repositorio está archivado.** Ahora se mantiene como [`layers/wm/bspwm`](https://github.com/anthonyportugal/dotfiles/tree/main/layers/wm/bspwm) en el monorepo [dotfiles](https://github.com/anthonyportugal/dotfiles).
+>
+> Se conserva como copia funcional de la configuración anterior de varios repositorios. Sus enlaces apuntan a las ramas `legacy` de [dotfiles](https://github.com/anthonyportugal/dotfiles/tree/legacy) y [walls](https://github.com/anthonyportugal/walls/tree/legacy), que forman parte de esa misma configuración. No recibirá más actualizaciones.
+
+
 <p align="center">
   <a href="https://github.com/anthonyportugal/dotfiles-bspwm/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/anthonyportugal/dotfiles-bspwm/ci.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white&label=CI" alt="CI"></a>
   <a href="https://kernel.org"><img src="https://img.shields.io/badge/OS-Linux-FCC624?style=flat-square&logo=linux&logoColor=black" alt="Linux"></a>
@@ -21,7 +27,7 @@ Sesión de escritorio X11 autónoma, modular y minimalista optimizada para **Arc
 
 > [!TIP]
 > 🧩 **Ecosistema Modular de Dotfiles:**  
-> [Base y CLI](https://github.com/anthonyportugal/dotfiles) • [MangoWM (Wayland)](https://github.com/anthonyportugal/dotfiles-mangowm) • **BSPWM (X11) [Actual]** • [Fondos de Pantalla](https://github.com/anthonyportugal/walls) • [Sistema](https://github.com/anthonyportugal/dotfiles-system)
+> [Base y CLI](https://github.com/anthonyportugal/dotfiles/tree/legacy) • [MangoWM (Wayland)](https://github.com/anthonyportugal/dotfiles-mangowm) • **BSPWM (X11) [Actual]** • [Fondos de Pantalla](https://github.com/anthonyportugal/walls/tree/legacy) • [Sistema](https://github.com/anthonyportugal/dotfiles-system)
 > 
 > Este repositorio proporciona un entorno de escritorio X11 autónomo y listo para producción, integrándose limpiamente con el ecosistema de dotfiles base.
 
@@ -159,7 +165,7 @@ Ejecuta el asistente interactivo para configurar tu perfil y el alcance de insta
 
 Aunque este repositorio funciona de forma **100% independiente**, se integra limpiamente con el ecosistema de dotfiles:
 
-- 🌐 **Repositorio Base:** [anthonyportugal/dotfiles](https://github.com/anthonyportugal/dotfiles)
+- 🌐 **Repositorio Base:** [anthonyportugal/dotfiles](https://github.com/anthonyportugal/dotfiles/tree/legacy)
 - **Ecosistema Compartido:** Al instalarse junto con el repositorio base, las configuraciones de terminal Alacritty, Zsh, Neovim y preferencias GTK se comparten entre sesiones X11 y Wayland sin duplicación.
 
 ---

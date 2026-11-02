@@ -1,5 +1,11 @@
 # BSPWM Dotfiles
 
+> [!WARNING]
+> **This repository is archived.** It is now maintained as [`layers/wm/bspwm`](https://github.com/anthonyportugal/dotfiles/tree/main/layers/wm/bspwm) in the [dotfiles](https://github.com/anthonyportugal/dotfiles) monorepo.
+>
+> It stays here as a working snapshot of the old multi-repository setup. Its links point to the `legacy` branches of [dotfiles](https://github.com/anthonyportugal/dotfiles/tree/legacy) and [walls](https://github.com/anthonyportugal/walls/tree/legacy), which belong to the same setup. It receives no more updates.
+
+
 <p align="center">
   <a href="https://github.com/anthonyportugal/dotfiles-bspwm/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/anthonyportugal/dotfiles-bspwm/ci.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white&label=CI" alt="CI"></a>
   <a href="https://kernel.org"><img src="https://img.shields.io/badge/OS-Linux-FCC624?style=flat-square&logo=linux&logoColor=black" alt="Linux"></a>
@@ -21,7 +27,7 @@ Autonomous, modular, and minimal X11 desktop session optimized for **Arch Linux*
 
 > [!TIP]
 > 🧩 **Modular Dotfiles Ecosystem:**  
-> [Base & CLI](https://github.com/anthonyportugal/dotfiles) • [MangoWM (Wayland)](https://github.com/anthonyportugal/dotfiles-mangowm) • **BSPWM (X11) [Current]** • [Wallpapers](https://github.com/anthonyportugal/walls) • [System](https://github.com/anthonyportugal/dotfiles-system)
+> [Base & CLI](https://github.com/anthonyportugal/dotfiles/tree/legacy) • [MangoWM (Wayland)](https://github.com/anthonyportugal/dotfiles-mangowm) • **BSPWM (X11) [Current]** • [Wallpapers](https://github.com/anthonyportugal/walls/tree/legacy) • [System](https://github.com/anthonyportugal/dotfiles-system)
 > 
 > This repository provides a standalone, production-ready X11 desktop environment and seamlessly integrates with the base dotfiles ecosystem.
 
@@ -159,7 +165,7 @@ Run the interactive setup wizard to configure your profile and installation scop
 
 While this repository operates **100% standalone**, it seamlessly integrates with the base dotfiles ecosystem:
 
-- 🌐 **Primary Base Repository:** [anthonyportugal/dotfiles](https://github.com/anthonyportugal/dotfiles)
+- 🌐 **Primary Base Repository:** [anthonyportugal/dotfiles](https://github.com/anthonyportugal/dotfiles/tree/legacy)
 - **Shared Ecosystem:** When installed alongside the base repository, Alacritty terminal styling, Zsh configurations, Neovim setups, and GTK theme preferences are shared effortlessly between X11 and Wayland sessions.
 
 ---
